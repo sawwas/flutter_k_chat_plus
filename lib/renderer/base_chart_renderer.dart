@@ -16,7 +16,8 @@ abstract class BaseChartRenderer<T> {
   Paint gridPaint = Paint()
     ..isAntiAlias = true
     ..filterQuality = FilterQuality.high
-    ..strokeWidth = 0.5
+  //EMA
+    ..strokeWidth = 0.21
     ..color = Color(0xff4c5c74);
 
   BaseChartRenderer({
@@ -43,15 +44,34 @@ abstract class BaseChartRenderer<T> {
       return "0.00";
     } else {
       if(isNotPoint){
-        return n.toStringAsFixed(0);
+        return n.toStringAsFixed(2);
       }
-      if (fixedLength > 21) {
-        return n.toStringAsFixed(fixedLength ~/ 2);
-      } else {
-        return n.toStringAsFixed(fixedLength);
-      }
+      //EMA
+      return formatValue(n);
+      // if (fixedLength > 21) {
+      //   return n.toStringAsFixed(fixedLength ~/ 2);
+      // } else {
+      //   return n.toStringAsFixed(fixedLength);
+      // }
     }
   }
+
+  // void main() {
+  //   double value1 = 0.0000000002010;
+  //   double value2 = 61210.543912929212;
+  //   double value3 = 0.000123456;
+  //   double value4 = 0.987654;
+  //
+  //   String formattedValue1 = formatValue(value1);
+  //   String formattedValue2 = formatValue(value2);
+  //   String formattedValue3 = formatValue(value3);
+  //   String formattedValue4 = formatValue(value4);
+  //
+  //   print('Formatted Value1: $formattedValue1');
+  //   print('Formatted Value2: $formattedValue2');
+  //   print('Formatted Value3: $formattedValue3');
+  //   print('Formatted Value4: $formattedValue4');
+  // }
 
   int getDecimalPlaces(double number) {
     String numberString = number.toString();
@@ -87,5 +107,22 @@ abstract class BaseChartRenderer<T> {
 
   TextStyle getTextStyle(Color color) {
     return TextStyle(fontSize: 10.0, color: color);
+  }
+}
+
+//EMA
+String formatValue(double value) {
+  if (value < 1e-6) {
+    // 对于非常小的数值，显示足够多的小数位
+    return value.toStringAsFixed(13).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');
+  } else if (value < 1) {
+    // 对于小于1但不非常小的数值，显示最多6位小数
+    return value.toStringAsFixed(6).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');
+  } else if (value < 1000) {
+    // 对于大于等于1且小于1000的数值，保留2位小数
+    return value.toStringAsFixed(2).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');
+  } else {
+    // 对于大于等于1000的数值，保留1位小数
+    return value.toStringAsFixed(1).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');
   }
 }

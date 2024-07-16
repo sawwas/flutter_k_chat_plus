@@ -6,6 +6,8 @@ mixin CandleEntity {
   late double close;
 
   List<double>? maValueList;
+  //EMA
+  List<double>? emaValueList;
 
 //  上轨线
   double? up;

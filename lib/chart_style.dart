@@ -94,6 +94,20 @@ class ChartColors {
         return ma5Color;
     }
   }
+//EMA
+  /// get EMA color via index
+  Color getEMAColor(int index) {
+    switch (index % 4) {
+      case 1:
+        return ma10Color;
+      case 2:
+        return ma30Color;
+        case 3:
+        return macdColor;
+      default:
+        return ma5Color;
+    }
+  }
 
   /// constructor chart color
   ChartColors({

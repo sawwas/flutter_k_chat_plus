@@ -1,11 +1,16 @@
 import 'dart:math';
 
 import '../entity/index.dart';
+import '../extends_futures/ema_indicator.dart';
 
 class DataUtil {
   static calculate(List<KLineEntity> dataList,
-      [List<int> maDayList = const [5, 10, 20], int n = 20, k = 2]) {
+      //EMA
+      [List<int> maDayList = const [5, 10, 20], int n = 20, k = 2,List<int> emaDayList = const [5, 10, 20, 60]]) {
     calcMA(dataList, maDayList);
+    // 新增EMA计算
+    //EMA
+    calcEMA(dataList, emaDayList);
     calcBOLL(dataList, n, k);
     calcVolumeMA(dataList);
     calcKDJ(dataList);
@@ -38,6 +43,32 @@ class DataUtil {
       }
     }
   }
+//EMA
+  static void calcEMA(List<KLineEntity> dataList, List<int> emaDayList) {
+    if (dataList.isNotEmpty) {
+      Map<int, double> previousEma = {};
+      for (int period in emaDayList) {
+        previousEma[period] = dataList[0].close; // 初始化第一个EMA值为第一个收盘价
+      }
+
+      for (int i = 0; i < dataList.length; i++) {
+        KLineEntity entity = dataList[i];
+        entity.emaValueList ??= List<double>.filled(emaDayList.length, 0);
+
+        for (int period in emaDayList) {
+          double multiplier = 2 / (period + 1);
+          if (i == 0) {
+            entity.emaValueList![emaDayList.indexOf(period)] = entity.close;
+          } else {
+            double ema = (entity.close - previousEma[period]!) * multiplier + previousEma[period]!;
+            entity.emaValueList![emaDayList.indexOf(period)] = ema;
+            previousEma[period] = ema; // 更新前一个EMA值
+          }
+        }
+      }
+    }
+  }
+
 
   static void calcBOLL(List<KLineEntity> dataList, int n, int k) {
     _calcBOLLMA(n, dataList);

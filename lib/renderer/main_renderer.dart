@@ -21,6 +21,8 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
   late Rect _contentRect;
   double _contentPadding = 5.0;
   List<int> maDayList;
+  //EMA
+  List<int> emaValueList;
   final ChartStyle chartStyle;
   final ChartColors chartColors;
   final double mLineStrokeWidth = 1.0;
@@ -40,14 +42,15 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       this.chartColors,
       this.scaleX,
       this.verticalTextAlignment,
-      [this.maDayList = const [5, 10, 20]])
+      //EMA
+      [this.maDayList = const [5, 10, 20],this.emaValueList = const [5, 10, 30, 60],])
       : super(
-            chartRect: mainRect,
-            maxValue: maxValue,
-            minValue: minValue,
-            topPadding: topPadding,
-            fixedLength: fixedLength,
-            gridColor: chartColors.gridColor) {
+      chartRect: mainRect,
+      maxValue: maxValue,
+      minValue: minValue,
+      topPadding: topPadding,
+      fixedLength: fixedLength,
+      gridColor: chartColors.gridColor) {
     mCandleWidth = this.chartStyle.candleWidth;
     mCandleLineWidth = this.chartStyle.candleLineWidth;
     mLinePaint = Paint()
@@ -72,8 +75,20 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     if (isLine == true) return;
     TextSpan? span;
     if (state == MainState.MA) {
+      // span = TextSpan(
+      //   children: _createMATextSpan(data),
+      // );
       span = TextSpan(
-        children: _createMATextSpan(data),
+        children: [
+          TextSpan(
+            children: _createMATextSpan(data),
+          ),
+          //EMA
+          TextSpan(text: '\n'),
+          TextSpan(
+            children: _createEMATextSpan(data),
+          ),
+        ],
       );
     } else if (state == MainState.BOLL) {
       span = TextSpan(
@@ -113,6 +128,41 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     }
     return result;
   }
+//EMA
+  List<InlineSpan> _createEMATextSpan(CandleEntity data) {
+    List<InlineSpan> result = [];
+    for (int i = 0; i < (data.emaValueList?.length ?? 0); i++) {
+      if (data.emaValueList?[i] != 0) {
+        var item = TextSpan(
+            text: "MA${emaValueList[i]}:${format(data.emaValueList![i])}    ",
+            style: getTextStyle(this.chartColors.getMAColor(i)));
+        result.add(item);
+      }
+    }
+    return result;
+  }
+
+
+
+  // 添加EMA计算函数
+  //EMA
+  List<double> calculateEMA(List<double> prices, int period) {
+    List<double> ema = [];
+    double multiplier = 2 / (period + 1);
+
+    double sum = 0;
+    for (int i = 0; i < period; i++) {
+      sum += prices[i];
+    }
+    ema.add(sum / period);
+
+    for (int i = period; i < prices.length; i++) {
+      double value = (prices[i] - ema.last) * multiplier + ema.last;
+      ema.add(value);
+    }
+
+    return ema;
+  }
 
   @override
   void drawChart(CandleEntity lastPoint, CandleEntity curPoint, double lastX,
@@ -123,8 +173,26 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       drawCandle(curPoint, canvas, curX);
       if (state == MainState.MA) {
         drawMaLine(lastPoint, curPoint, canvas, lastX, curX);
+        //// 新增EMA绘制逻辑
+        //EMA
+        drawEmaLine(lastPoint, curPoint, canvas, lastX, curX);
       } else if (state == MainState.BOLL) {
         drawBollLine(lastPoint, curPoint, canvas, lastX, curX);
+      }
+    }
+  }
+
+  // 实现EMA绘制函数
+  //EMA
+  void drawEmaLine(CandleEntity lastPoint, CandleEntity curPoint, Canvas canvas,
+      double lastX, double curX) {
+    for (int i = 0; i < (curPoint.emaValueList?.length ?? 0); i++) {
+      if (i == 4) {
+        break;
+      }
+      if (lastPoint.emaValueList?[i] != 0) {
+        drawLine(lastPoint.emaValueList?[i], curPoint.emaValueList?[i], canvas,
+            lastX, curX, this.chartColors.getEMAColor(i));
       }
     }
   }
@@ -135,7 +203,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     ..style = PaintingStyle.fill
     ..isAntiAlias = true;
 
-  //画折线图
+//画折线图
   drawPolyline(double lastPrice, double curPrice, Canvas canvas, double lastX,
       double curX) {
 //    drawLine(lastPrice + 100, curPrice + 100, canvas, lastX, curX, ChartColors.kLineColor);

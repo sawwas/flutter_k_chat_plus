@@ -91,11 +91,13 @@ class ChartPainter extends BaseChartPainter {
             isLine: isLine) {
     selectPointPaint = Paint()
       ..isAntiAlias = true
-      ..strokeWidth = 0.5
+    //EMA
+      ..strokeWidth = 0.21
       ..color = this.chartColors.selectFillColor;
     selectorBorderPaint = Paint()
       ..isAntiAlias = true
-      ..strokeWidth = 0.5
+    //EMA
+      ..strokeWidth = 0.21
       ..style = PaintingStyle.stroke
       ..color = this.chartColors.selectBorderColor;
     nowPricePaint = Paint()
@@ -208,7 +210,9 @@ class ChartPainter extends BaseChartPainter {
   @override
   void drawVerticalText(canvas) {
     var textStyle = getTextStyle(this.chartColors.defaultTextColor);
-    if (!hideGrid || this.chartStyle.isNotPoint) {
+    //EMA
+    // if (!hideGrid || this.chartStyle.isNotPoint) {
+    if (!hideGrid) {
       mMainRenderer.drawVerticalText(canvas, textStyle, mGridRows);
     }
     mVolRenderer?.drawVerticalText(canvas, textStyle, mGridRows);
@@ -350,13 +354,17 @@ class ChartPainter extends BaseChartPainter {
     double y = getMainY(mMainLowMinValue);
     if (x < mWidth / 2) {
       //draw right
+      //EMA
       TextPainter tp = getTextPainter(
-          "── " + mMainLowMinValue.toStringAsFixed(fixedLength),
+          // "── " + mMainLowMinValue.toStringAsFixed(fixedLength),
+          "── " +  formatValue(mMainLowMinValue),
           chartColors.minColor);
       tp.paint(canvas, Offset(x + this.chartStyle.leftPadding, y - tp.height / 2));
     } else {
+      //EMA
       TextPainter tp = getTextPainter(
-          mMainLowMinValue.toStringAsFixed(fixedLength) + " ──",
+          // mMainLowMinValue.toStringAsFixed(fixedLength) + " ──",
+          formatValue(mMainLowMinValue) + " ──",
           chartColors.minColor);
       tp.paint(canvas, Offset(x + this.chartStyle.leftPadding - tp.width, y - tp.height / 2));
     }
@@ -364,13 +372,17 @@ class ChartPainter extends BaseChartPainter {
     y = getMainY(mMainHighMaxValue);
     if (x < mWidth / 2) {
       //draw right
+      //EMA
       TextPainter tp = getTextPainter(
-          "── " + mMainHighMaxValue.toStringAsFixed(fixedLength),
+          // "── " + mMainHighMaxValue.toStringAsFixed(fixedLength),
+          "── " + formatValue(mMainHighMaxValue),
           chartColors.maxColor);
       tp.paint(canvas, Offset(x + this.chartStyle.leftPadding, y - tp.height / 2));
     } else {
+      //EMA
       TextPainter tp = getTextPainter(
-          mMainHighMaxValue.toStringAsFixed(fixedLength) + " ──",
+          // mMainHighMaxValue.toStringAsFixed(fixedLength) + " ──",
+          formatValue(mMainHighMaxValue)+ " ──",
           chartColors.maxColor);
       tp.paint(canvas, Offset(x + this.chartStyle.leftPadding - tp.width, y - tp.height / 2));
     }
