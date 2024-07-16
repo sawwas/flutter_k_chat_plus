@@ -2,10 +2,11 @@
 
 ## Feature
 
-### 2024-07-18 更新手势缩放功能
+### 2024-07-18 更新手势缩放功能 
 
 ### 2024-07-17 更新EMA指标
 
+### 2024-07-16 骨架屏功能
 
 Maybe this is the best k chart in Flutter.Support drag,scale,long press,fling.And easy to use.
 

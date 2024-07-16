@@ -336,7 +336,7 @@ class DepthChartPainter extends CustomPainter {
       chartTranslations: this.chartTranslations,
       chartColors: this.chartColors,
       price: entity.price.toStringAsFixed(fixedLength!),
-      amount: entity.vol.toStringAsFixed(fixedLength!),
+      amount: (entity.vol).toStringAsFixed(fixedLength!),
     );
     dx = dx < mDrawWidth ? dx + offset.dx : dx - offset.dx - popupPainter.width;
     dy = dy < mDrawHeight / 2
@@ -380,7 +380,7 @@ class DepthChartPainter extends CustomPainter {
   getTextPainter(String text) => TextPainter(
         text: TextSpan(
           text: "$text",
-          style: TextStyle(color: chartColors.defaultTextColor, fontSize: 10),
+          style: TextStyle(color: chartColors.defaultTextColor, fontSize: chartColors.sizeText),
         ),
         textDirection: TextDirection.ltr,
       );
@@ -439,12 +439,12 @@ class _PopupPainter {
       text: TextSpan(
         text: "$label: ",
         style: TextStyle(
-            color: this.chartColors.infoWindowTitleColor, fontSize: 10),
+            color: this.chartColors.infoWindowTitleColor, fontSize: chartColors.sizeText),
         children: [
           TextSpan(
             text: content,
             style: TextStyle(
-                color: this.chartColors.infoWindowNormalColor, fontSize: 10),
+                color: this.chartColors.infoWindowNormalColor, fontSize: chartColors.sizeText),
           ),
         ],
       ),

@@ -30,12 +30,14 @@ class PopupInfoView extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: chartColors.selectFillColor,
-        border: Border.all(color: chartColors.selectBorderColor, width: 0.5),
+        // border: Border.all(color: chartColors.selectBorderColor, width: 0.5),
+        borderRadius:  BorderRadius.all(Radius.circular(5.0)),
+
       ),
       child: SizedBox(
         width: width,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 0.0),
+          padding: EdgeInsets.fromLTRB(6.0, 3.0, 6.0, 0.0),
           child: _buildBody(context),
         ),
       ),
@@ -81,7 +83,7 @@ class PopupInfoView extends StatelessWidget {
 
   Widget _buildItem(String label, String info, {Color? textColor}) {
     final infoWidget = Padding(
-      padding: const EdgeInsets.only(bottom: 6.0),
+      padding: const EdgeInsets.only(bottom: 3.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -90,7 +92,7 @@ class PopupInfoView extends StatelessWidget {
             label,
             style: TextStyle(
               color: chartColors.infoWindowTitleColor,
-              fontSize: 10.0,
+              fontSize: chartColors.sizeText,
             ),
           ),
           Expanded(
@@ -98,7 +100,7 @@ class PopupInfoView extends StatelessWidget {
               info,
               style: TextStyle(
                   color: textColor ?? chartColors.infoWindowNormalColor,
-                  fontSize: 10.0),
+                  fontSize: chartColors.sizeText),
               textAlign: TextAlign.right,
             ),
           ),

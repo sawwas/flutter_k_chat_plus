@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show Color;
+import 'package:flutter/material.dart' show Color, Colors;
 
 /// ChartColors
 ///
@@ -83,6 +83,8 @@ class ChartColors {
   Color maxColor;
   Color minColor;
 
+  double sizeText = 10.0;
+
   /// get MA color via index
   Color getMAColor(int index) {
     switch (index % 3) {
@@ -103,7 +105,7 @@ class ChartColors {
       case 2:
         return ma30Color;
         case 3:
-        return macdColor;
+        return Colors.blueAccent;
       default:
         return ma5Color;
     }
@@ -121,9 +123,9 @@ class ChartColors {
     this.lineFillInsideColor = const Color(0x00000000),
 
     ///
-    this.ma5Color = const Color(0xffE5B767),
+    this.ma5Color = const Color(0xffB48CE3),
     this.ma10Color = const Color(0xff1FD1AC),
-    this.ma30Color = const Color(0xffB48CE3),
+    this.ma30Color = const Color(0xffE5B767),
     this.upColor = const Color(0xFF14AD8F),
     this.dnColor = const Color(0xFFD5405D),
     this.volColor = const Color(0xff2f8fd5),
@@ -169,6 +171,8 @@ class ChartColors {
     ///The color of the maximum and minimum values in the current display
     this.maxColor = const Color(0xFF222223),
     this.minColor = const Color(0xFF222223),
+
+    this.sizeText = 10.0,
   });
 }
 
@@ -191,6 +195,9 @@ class ChartStyle {
 
   // 是否显示策略类型底部
   bool isShowStrategyTypeBottom = true;
+
+  // 是否显示策略类型EMA
+  bool isShowEma = true;
 
   double bottomPadding = 20.0;
 
@@ -220,6 +227,11 @@ class ChartStyle {
 
   int gridRows = 4;
   int gridColumns = 4;
+
+  double sizeText = 10.0;
+
+  bool isFocusCloseText = true;
+
 
   ///customize the time below
   List<String>? dateTimeFormat;

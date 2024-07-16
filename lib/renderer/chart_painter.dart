@@ -91,12 +91,12 @@ class ChartPainter extends BaseChartPainter {
             isLine: isLine) {
     selectPointPaint = Paint()
       ..isAntiAlias = true
-    //EMA
+      //EMA
       ..strokeWidth = 0.21
       ..color = this.chartColors.selectFillColor;
     selectorBorderPaint = Paint()
       ..isAntiAlias = true
-    //EMA
+      //EMA
       ..strokeWidth = 0.21
       ..style = PaintingStyle.stroke
       ..color = this.chartColors.selectBorderColor;
@@ -278,29 +278,33 @@ class ChartPainter extends BaseChartPainter {
     if (translateXtoX(getX(index)) < mWidth / 2) {
       isLeft = false;
       x = 1;
-      Path path = new Path();
-      path.moveTo(x, y - r);
-      path.lineTo(x, y + r);
-      path.lineTo(textWidth + 2 * w1, y + r);
-      path.lineTo(textWidth + 2 * w1 + w2, y);
-      path.lineTo(textWidth + 2 * w1, y - r);
-      path.close();
-      canvas.drawPath(path, selectPointPaint);
-      canvas.drawPath(path, selectorBorderPaint);
-      tp.paint(canvas, Offset(x + w1, y - textHeight / 2));
+      if (chartStyle.isFocusCloseText) {
+        Path path = new Path();
+        path.moveTo(x, y - r);
+        path.lineTo(x, y + r);
+        path.lineTo(textWidth + 2 * w1, y + r);
+        path.lineTo(textWidth + 2 * w1 + w2, y);
+        path.lineTo(textWidth + 2 * w1, y - r);
+        path.close();
+        canvas.drawPath(path, selectPointPaint);
+        canvas.drawPath(path, selectorBorderPaint);
+        tp.paint(canvas, Offset(x + w1, y - textHeight / 2));
+      }
     } else {
       isLeft = true;
       x = mWidth - textWidth - 1 - 2 * w1 - w2;
-      Path path = new Path();
-      path.moveTo(x, y);
-      path.lineTo(x + w2, y + r);
-      path.lineTo(mWidth - 2, y + r);
-      path.lineTo(mWidth - 2, y - r);
-      path.lineTo(x + w2, y - r);
-      path.close();
-      canvas.drawPath(path, selectPointPaint);
-      canvas.drawPath(path, selectorBorderPaint);
-      tp.paint(canvas, Offset(x + w1 + w2, y - textHeight / 2));
+      if (chartStyle.isFocusCloseText) {
+        Path path = new Path();
+        path.moveTo(x, y);
+        path.lineTo(x + w2, y + r);
+        path.lineTo(mWidth - 2, y + r);
+        path.lineTo(mWidth - 2, y - r);
+        path.lineTo(x + w2, y - r);
+        path.close();
+        canvas.drawPath(path, selectPointPaint);
+        canvas.drawPath(path, selectorBorderPaint);
+        tp.paint(canvas, Offset(x + w1 + w2, y - textHeight / 2));
+      }
     }
 
     TextPainter dateTp =
@@ -348,7 +352,7 @@ class ChartPainter extends BaseChartPainter {
   @override
   void drawMaxAndMin(Canvas canvas) {
     if (isLine == true) return;
-    if(!this.chartStyle.isShowHighOrLowPoint) return;
+    if (!this.chartStyle.isShowHighOrLowPoint) return;
     //plot maxima and minima
     double x = translateXtoX(getX(mMainMinIndex));
     double y = getMainY(mMainLowMinValue);
@@ -357,16 +361,20 @@ class ChartPainter extends BaseChartPainter {
       //EMA
       TextPainter tp = getTextPainter(
           // "── " + mMainLowMinValue.toStringAsFixed(fixedLength),
-          "── " +  formatValue(mMainLowMinValue),
+          "── " + formatValue(mMainLowMinValue),
           chartColors.minColor);
-      tp.paint(canvas, Offset(x + this.chartStyle.leftPadding, y - tp.height / 2));
+      tp.paint(
+          canvas, Offset(x + this.chartStyle.leftPadding, y - tp.height / 2));
     } else {
       //EMA
       TextPainter tp = getTextPainter(
           // mMainLowMinValue.toStringAsFixed(fixedLength) + " ──",
           formatValue(mMainLowMinValue) + " ──",
           chartColors.minColor);
-      tp.paint(canvas, Offset(x + this.chartStyle.leftPadding - tp.width, y - tp.height / 2));
+      tp.paint(
+          canvas,
+          Offset(
+              x + this.chartStyle.leftPadding - tp.width, y - tp.height / 2));
     }
     x = translateXtoX(getX(mMainMaxIndex));
     y = getMainY(mMainHighMaxValue);
@@ -377,14 +385,18 @@ class ChartPainter extends BaseChartPainter {
           // "── " + mMainHighMaxValue.toStringAsFixed(fixedLength),
           "── " + formatValue(mMainHighMaxValue),
           chartColors.maxColor);
-      tp.paint(canvas, Offset(x + this.chartStyle.leftPadding, y - tp.height / 2));
+      tp.paint(
+          canvas, Offset(x + this.chartStyle.leftPadding, y - tp.height / 2));
     } else {
       //EMA
       TextPainter tp = getTextPainter(
           // mMainHighMaxValue.toStringAsFixed(fixedLength) + " ──",
-          formatValue(mMainHighMaxValue)+ " ──",
+          formatValue(mMainHighMaxValue) + " ──",
           chartColors.maxColor);
-      tp.paint(canvas, Offset(x + this.chartStyle.leftPadding - tp.width, y - tp.height / 2));
+      tp.paint(
+          canvas,
+          Offset(
+              x + this.chartStyle.leftPadding - tp.width, y - tp.height / 2));
     }
   }
 
@@ -450,6 +462,133 @@ class ChartPainter extends BaseChartPainter {
   }
 
   //For TrendLine
+  // void drawTrendLines(Canvas canvas, Size size) {
+  //   var index = calculateSelectedX(selectX);
+  //   Paint paintY = Paint()
+  //     ..color = chartColors.trendLineColor
+  //     ..strokeWidth = 1
+  //     ..isAntiAlias = true;
+  //   double x = getX(index);
+  //   trendLineX = x;
+  //
+  //   double y = selectY;
+  //   // getMainY(point.close);
+  //
+  //   // K-line chart vertical line
+  //   canvas.drawLine(Offset(x, mTopPadding),
+  //       Offset(x, size.height - mBottomPadding), paintY);
+  //   Paint paintX = Paint()
+  //     ..color = chartColors.trendLineColor
+  //     ..strokeWidth = 1
+  //     ..isAntiAlias = true;
+  //   Paint paint = Paint()
+  //     ..color = chartColors.trendLineColor
+  //     ..strokeWidth = 1.0
+  //     ..style = PaintingStyle.stroke
+  //     ..strokeCap = StrokeCap.round;
+  //   canvas.drawLine(Offset(-mTranslateX, y),
+  //       Offset(-mTranslateX + mWidth / scaleX, y), paintX);
+  //   if (scaleX >= 1) {
+  //     canvas.drawOval(
+  //       Rect.fromCenter(
+  //           center: Offset(x, y), height: 15.0 * scaleX, width: 15.0),
+  //       paint,
+  //     );
+  //   } else {
+  //     canvas.drawOval(
+  //       Rect.fromCenter(
+  //           center: Offset(x, y), height: 10.0, width: 10.0 / scaleX),
+  //       paint,
+  //     );
+  //   }
+  //   if (lines.isNotEmpty) {
+  //     lines.forEach((element) {
+  //       var y1 = -((element.p1.dy - 35) / element.scale) + element.maxHeight;
+  //       var y2 = -((element.p2.dy - 35) / element.scale) + element.maxHeight;
+  //       var a = (trendLineMax! - y1) * trendLineScale! + trendLineContentRec!;
+  //       var b = (trendLineMax! - y2) * trendLineScale! + trendLineContentRec!;
+  //       var p1 = Offset(element.p1.dx, a);
+  //       var p2 = Offset(element.p2.dx, b);
+  //       canvas.drawLine(
+  //           p1,
+  //           element.p2 == Offset(-1, -1) ? Offset(x, y) : p2,
+  //           Paint()
+  //             ..color = Colors.yellow
+  //             ..strokeWidth = 2);
+  //     });
+  //   }
+  // }
+
+  ///draw cross lines
+  // void drawCrossLine(Canvas canvas, Size size) {
+  //   var index = calculateSelectedX(selectX);
+  //   KLineEntity point = getItem(index);
+  //   Paint paintY = Paint()
+  //     ..color = this.chartColors.vCrossColor
+  //     ..strokeWidth = this.chartStyle.vCrossWidth
+  //     ..isAntiAlias = true;
+  //   double x = getX(index);
+  //   double y = getMainY(point.close);
+  //   // K-line chart vertical line
+  //   canvas.drawLine(Offset(x, mTopPadding),
+  //       Offset(x, size.height - mBottomPadding), paintY);
+  //
+  //   Paint paintX = Paint()
+  //     ..color = this.chartColors.hCrossColor
+  //     ..strokeWidth = this.chartStyle.hCrossWidth
+  //     ..isAntiAlias = true;
+  //   // K-line chart horizontal line
+  //   canvas.drawLine(Offset(-mTranslateX, y),
+  //       Offset(-mTranslateX + mWidth / scaleX, y), paintX);
+  //   if (scaleX >= 1) {
+  //     canvas.drawOval(
+  //       Rect.fromCenter(center: Offset(x, y), height: 2.0 * scaleX, width: 2.0),
+  //       paintX,
+  //     );
+  //   } else {
+  //     canvas.drawOval(
+  //       Rect.fromCenter(center: Offset(x, y), height: 2.0, width: 2.0 / scaleX),
+  //       paintX,
+  //     );
+  //   }
+  // }
+
+  void drawCrossLine(Canvas canvas, Size size) {
+    var index = calculateSelectedX(selectX);
+    KLineEntity point = getItem(index);
+    Paint paintY = Paint()
+      ..color = this.chartColors.vCrossColor
+      ..strokeWidth = this.chartStyle.vCrossWidth
+      ..isAntiAlias = true;
+    double x = getX(index);
+    double y = getMainY(point.close);
+
+    // Draw vertical dashed line
+    drawDashedLine(canvas, Offset(x, mTopPadding),
+        Offset(x, size.height - mBottomPadding), paintY);
+
+    Paint paintX = Paint()
+      ..color = this.chartColors.hCrossColor
+      ..strokeWidth = this.chartStyle.hCrossWidth
+      ..isAntiAlias = true;
+
+    // Draw horizontal dashed line
+    drawDashedLine(canvas, Offset(-mTranslateX, y),
+        Offset(-mTranslateX + mWidth / scaleX, y), paintX);
+
+    if (scaleX >= 1) {
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset(x, y), height: 2.0 * scaleX, width: 2.0),
+        paintX,
+      );
+    } else {
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset(x, y), height: 2.0, width: 2.0 / scaleX),
+        paintX,
+      );
+    }
+  }
+
   void drawTrendLines(Canvas canvas, Size size) {
     var index = calculateSelectedX(selectX);
     Paint paintY = Paint()
@@ -460,22 +599,24 @@ class ChartPainter extends BaseChartPainter {
     trendLineX = x;
 
     double y = selectY;
-    // getMainY(point.close);
 
-    // K-line chart vertical line
-    canvas.drawLine(Offset(x, mTopPadding),
+    drawDashedLine(canvas, Offset(x, mTopPadding),
         Offset(x, size.height - mBottomPadding), paintY);
+
     Paint paintX = Paint()
       ..color = chartColors.trendLineColor
       ..strokeWidth = 1
       ..isAntiAlias = true;
+
+    drawDashedLine(canvas, Offset(-mTranslateX, y),
+        Offset(-mTranslateX + mWidth / scaleX, y), paintX);
+
     Paint paint = Paint()
       ..color = chartColors.trendLineColor
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
-    canvas.drawLine(Offset(-mTranslateX, y),
-        Offset(-mTranslateX + mWidth / scaleX, y), paintX);
+
     if (scaleX >= 1) {
       canvas.drawOval(
         Rect.fromCenter(
@@ -507,37 +648,18 @@ class ChartPainter extends BaseChartPainter {
     }
   }
 
-  ///draw cross lines
-  void drawCrossLine(Canvas canvas, Size size) {
-    var index = calculateSelectedX(selectX);
-    KLineEntity point = getItem(index);
-    Paint paintY = Paint()
-      ..color = this.chartColors.vCrossColor
-      ..strokeWidth = this.chartStyle.vCrossWidth
-      ..isAntiAlias = true;
-    double x = getX(index);
-    double y = getMainY(point.close);
-    // K-line chart vertical line
-    canvas.drawLine(Offset(x, mTopPadding),
-        Offset(x, size.height - mBottomPadding), paintY);
+  void drawDashedLine(Canvas canvas, Offset start, Offset end, Paint paint) {
+    const double dashWidth = 3;
+    const double dashSpace = 2;
+    double distance = (end - start).distance;
+    double dashCount = (distance / (dashWidth + dashSpace)).floorToDouble();
 
-    Paint paintX = Paint()
-      ..color = this.chartColors.hCrossColor
-      ..strokeWidth = this.chartStyle.hCrossWidth
-      ..isAntiAlias = true;
-    // K-line chart horizontal line
-    canvas.drawLine(Offset(-mTranslateX, y),
-        Offset(-mTranslateX + mWidth / scaleX, y), paintX);
-    if (scaleX >= 1) {
-      canvas.drawOval(
-        Rect.fromCenter(center: Offset(x, y), height: 2.0 * scaleX, width: 2.0),
-        paintX,
-      );
-    } else {
-      canvas.drawOval(
-        Rect.fromCenter(center: Offset(x, y), height: 2.0, width: 2.0 / scaleX),
-        paintX,
-      );
+    for (int i = 0; i < dashCount; ++i) {
+      double startX = start.dx + (end.dx - start.dx) * (i / dashCount);
+      double startY = start.dy + (end.dy - start.dy) * (i / dashCount);
+      double endX = start.dx + (end.dx - start.dx) * ((i + 0.5) / dashCount);
+      double endY = start.dy + (end.dy - start.dy) * ((i + 0.5) / dashCount);
+      canvas.drawLine(Offset(startX, startY), Offset(endX, endY), paint);
     }
   }
 

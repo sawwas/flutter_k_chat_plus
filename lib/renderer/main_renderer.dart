@@ -21,6 +21,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
   late Rect _contentRect;
   double _contentPadding = 5.0;
   List<int> maDayList;
+
   //EMA
   List<int> emaValueList;
   final ChartStyle chartStyle;
@@ -31,26 +32,28 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
   final VerticalTextAlignment verticalTextAlignment;
 
   MainRenderer(
-      Rect mainRect,
-      double maxValue,
-      double minValue,
-      double topPadding,
-      this.state,
-      this.isLine,
-      int fixedLength,
-      this.chartStyle,
-      this.chartColors,
-      this.scaleX,
-      this.verticalTextAlignment,
-      //EMA
-      [this.maDayList = const [5, 10, 20],this.emaValueList = const [5, 10, 30, 60],])
-      : super(
-      chartRect: mainRect,
-      maxValue: maxValue,
-      minValue: minValue,
-      topPadding: topPadding,
-      fixedLength: fixedLength,
-      gridColor: chartColors.gridColor) {
+    Rect mainRect,
+    double maxValue,
+    double minValue,
+    double topPadding,
+    this.state,
+    this.isLine,
+    int fixedLength,
+    this.chartStyle,
+    this.chartColors,
+    this.scaleX,
+    this.verticalTextAlignment,
+    //EMA
+    [
+    this.maDayList = const [5, 10, 20],
+    this.emaValueList = const [5, 10, 30, 60],
+  ]) : super(
+            chartRect: mainRect,
+            maxValue: maxValue,
+            minValue: minValue,
+            topPadding: topPadding,
+            fixedLength: fixedLength,
+            gridColor: chartColors.gridColor) {
     mCandleWidth = this.chartStyle.candleWidth;
     mCandleLineWidth = this.chartStyle.candleLineWidth;
     mLinePaint = Paint()
@@ -78,16 +81,19 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       // span = TextSpan(
       //   children: _createMATextSpan(data),
       // );
+      String value = '${format((data.maValueList??[0])[0])}';
       span = TextSpan(
         children: [
           TextSpan(
             children: _createMATextSpan(data),
           ),
-          //EMA
-          TextSpan(text: '\n'),
-          TextSpan(
-            children: _createEMATextSpan(data),
-          ),
+          if (this.chartStyle.isShowEma && value.length <= 13)
+            //EMA
+            TextSpan(text: '\n'),
+          if (this.chartStyle.isShowEma)
+            TextSpan(
+              children: _createEMATextSpan(data),
+            ),
         ],
       );
     } else if (state == MainState.BOLL) {
@@ -111,7 +117,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     if (span == null) return;
     TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
     tp.layout();
-    if(this.chartStyle.isShowStrategyTypeTop){
+    if (this.chartStyle.isShowStrategyTypeTop) {
       tp.paint(canvas, Offset(x, chartRect.top - topPadding));
     }
   }
@@ -120,29 +126,38 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     List<InlineSpan> result = [];
     for (int i = 0; i < (data.maValueList?.length ?? 0); i++) {
       if (data.maValueList?[i] != 0) {
+        String value = '${format(data.maValueList![i])}';
         var item = TextSpan(
-            text: "MA${maDayList[i]}:${format(data.maValueList![i])}    ",
+            text: "MA${maDayList[i]}:$value    ",
             style: getTextStyle(this.chartColors.getMAColor(i)));
         result.add(item);
+        if (value.length > 13 && i > 0 && i % 1 == 0)
+          result.add(TextSpan(text: '\n'));
       }
+
     }
     return result;
   }
+
 //EMA
   List<InlineSpan> _createEMATextSpan(CandleEntity data) {
     List<InlineSpan> result = [];
     for (int i = 0; i < (data.emaValueList?.length ?? 0); i++) {
       if (data.emaValueList?[i] != 0) {
+        String value = '${format(data.emaValueList![i])}';
         var item = TextSpan(
-            text: "MA${emaValueList[i]}:${format(data.emaValueList![i])}    ",
-            style: getTextStyle(this.chartColors.getMAColor(i)));
+            text: "EMA${emaValueList[i]}:$value    ",
+            style: getTextStyle(this.chartColors.getEMAColor(i)));
+        if ((value.length > 13 && i > 0 && i % 2 == 0) || (value.length <= 13 && i > 2))
+          result.add(TextSpan(text: '\n'));
         result.add(item);
+        // if (i == 2) {
+        //   result.add(TextSpan(text: '\n'));
+        // }
       }
     }
     return result;
   }
-
-
 
   // 添加EMA计算函数
   //EMA
@@ -175,7 +190,9 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
         drawMaLine(lastPoint, curPoint, canvas, lastX, curX);
         //// 新增EMA绘制逻辑
         //EMA
-        drawEmaLine(lastPoint, curPoint, canvas, lastX, curX);
+        if (this.chartStyle.isShowEma) {
+          drawEmaLine(lastPoint, curPoint, canvas, lastX, curX);
+        }
       } else if (state == MainState.BOLL) {
         drawBollLine(lastPoint, curPoint, canvas, lastX, curX);
       }
@@ -315,7 +332,9 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     double rowSpace = chartRect.height / gridRows;
     for (var i = 0; i <= gridRows; ++i) {
       double value = (gridRows - i) * rowSpace / scaleY + minValue;
-      TextSpan span = TextSpan(text: "${format(value, isNotPoint: this.chartStyle.isNotPoint)}", style: textStyle);
+      TextSpan span = TextSpan(
+          text: "${format(value, isNotPoint: this.chartStyle.isNotPoint)}",
+          style: textStyle);
       TextPainter tp =
           TextPainter(text: span, textDirection: TextDirection.ltr);
       tp.layout();
@@ -333,8 +352,9 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       if (i == 0 && this.chartStyle.isShowLeftTopicPoint) {
         tp.paint(canvas, Offset(offsetX, topPadding));
       } else {
-        tp.paint(
-            canvas, Offset(offsetX, rowSpace * i - tp.height + topPadding));
+        if (this.chartStyle.isShowLeftTopicPoint || i > 0)
+          tp.paint(
+              canvas, Offset(offsetX, rowSpace * i - tp.height + topPadding));
       }
     }
   }

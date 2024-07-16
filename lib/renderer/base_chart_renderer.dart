@@ -106,7 +106,7 @@ abstract class BaseChartRenderer<T> {
   }
 
   TextStyle getTextStyle(Color color) {
-    return TextStyle(fontSize: 10.0, color: color);
+    return TextStyle(fontSize: 9.0, color: color);
   }
 }
 
@@ -115,6 +115,10 @@ String formatValue(double value) {
   if (value < 1e-6) {
     // 对于非常小的数值，显示足够多的小数位
     return value.toStringAsFixed(13).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');
+        } else if (value < 0.0001) {
+    // 对于小于0.0001的数值，显示13位小数
+    return value.toStringAsFixed(13).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');
+    // return value.toString();
   } else if (value < 1) {
     // 对于小于1但不非常小的数值，显示最多6位小数
     return value.toStringAsFixed(6).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');

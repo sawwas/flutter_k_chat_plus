@@ -408,7 +408,7 @@ abstract class BaseChartPainter extends CustomPainter {
 
   /// define text style
   TextStyle getTextStyle(Color color) {
-    return TextStyle(fontSize: 10.0, color: color);
+    return TextStyle(fontSize: chartStyle.sizeText, color: color);
   }
 
   @override
