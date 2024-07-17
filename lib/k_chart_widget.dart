@@ -31,10 +31,11 @@ class KChartWidget extends StatefulWidget {
   final MainState mainState;
   final bool volHidden;
   final Set<SecondaryState> secondaryStateLi;
+
   // final Function()? onSecondaryTap;
   final bool isLine;
   final bool
-      isTapShowInfoDialog; //Whether to enable click to display detailed data
+  isTapShowInfoDialog; //Whether to enable click to display detailed data
   final bool hideGrid;
   final bool showNowPrice;
   final bool showInfoDialog;
@@ -59,46 +60,50 @@ class KChartWidget extends StatefulWidget {
   final VerticalTextAlignment verticalTextAlignment;
   final bool isTrendLine;
   final double xFrontPadding;
+  final int isLongFocusDurationTime;
 
-  KChartWidget(
-    this.datas,
-    this.chartStyle,
-    this.chartColors, {
-    required this.isTrendLine,
-    this.xFrontPadding = 100,
-    this.mainState = MainState.MA,
-    this.secondaryStateLi = const <SecondaryState>{},
-    // this.onSecondaryTap,
-    this.volHidden = false,
-    this.isLine = false,
-    this.isTapShowInfoDialog = false,
-    this.hideGrid = false,
-    this.showNowPrice = true,
-    this.showInfoDialog = true,
-    this.materialInfoDialog = true,
-    this.chartTranslations = const ChartTranslations(),
-    this.timeFormat = TimeFormat.YEAR_MONTH_DAY,
-    this.onLoadMore,
-    this.fixedLength = 2,
-    this.maDayList = const [5, 10, 20],
-    this.flingTime = 600,
-    this.flingRatio = 0.5,
-    this.flingCurve = Curves.decelerate,
-    this.isOnDrag,
-    this.verticalTextAlignment = VerticalTextAlignment.left,
-    this.mBaseHeight = 360,
-  });
+  KChartWidget(this.datas, this.chartStyle, this.chartColors,
+      {required this.isTrendLine,
+        this.xFrontPadding = 100,
+        this.mainState = MainState.MA,
+        this.secondaryStateLi = const <SecondaryState>{},
+        // this.onSecondaryTap,
+        this.volHidden = false,
+        this.isLine = false,
+        this.isTapShowInfoDialog = false,
+        this.hideGrid = false,
+        this.showNowPrice = true,
+        this.showInfoDialog = true,
+        this.materialInfoDialog = true,
+        this.chartTranslations = const ChartTranslations(),
+        this.timeFormat = TimeFormat.YEAR_MONTH_DAY,
+        this.onLoadMore,
+        this.fixedLength = 2,
+        this.maDayList = const [5, 10, 20],
+        this.flingTime = 600,
+        this.flingRatio = 0.5,
+        this.flingCurve = Curves.decelerate,
+        this.isOnDrag,
+        this.verticalTextAlignment = VerticalTextAlignment.left,
+        this.mBaseHeight = 360,
+        //# 十字光标长按 / 短按切换 0.5秒后才触发
+        this.isLongFocusDurationTime = 500});
 
   @override
   _KChartWidgetState createState() => _KChartWidgetState();
 }
 
+bool longPressTriggered = false;
+
 class _KChartWidgetState extends State<KChartWidget>
     with TickerProviderStateMixin {
   final StreamController<InfoWindowEntity?> mInfoWindowStream =
-      StreamController<InfoWindowEntity?>();
-  double mScaleX = 1.0, mScrollX = 0.0, mSelectX = 0.0;
-  double mHeight = 0, mWidth = 0;
+  StreamController<InfoWindowEntity?>.broadcast();
+  double mScaleX = 1.0,
+      mScrollX = 0.0,
+      mSelectX = 0.0;
+  double mHeight = 0,
+      mWidth = 0;
   AnimationController? _controller;
   Animation<double>? aniX;
 
@@ -115,7 +120,10 @@ class _KChartWidgetState extends State<KChartWidget>
   }
 
   double _lastScale = 1.0;
-  bool isScale = false, isDrag = false, isLongPress = false, isOnTap = false;
+  bool isScale = false,
+      isDrag = false,
+      isLongPress = false,
+      isOnTap = false;
 
   int pointerCount = 0;
 
@@ -134,8 +142,12 @@ class _KChartWidgetState extends State<KChartWidget>
     mInfoWindowStream.sink.close();
     mInfoWindowStream.close();
     _controller?.dispose();
+    _timer?.cancel();
     super.dispose();
   }
+
+  DateTime? _longPressStartTime;
+  Timer? _timer;
 
   @override
   Widget build(BuildContext context) {
@@ -152,11 +164,14 @@ class _KChartWidgetState extends State<KChartWidget>
       widget.chartStyle,
       widget.chartColors,
       baseDimension: baseDimension,
-      lines: lines, //For TrendLine
+      lines: lines,
+      //For TrendLine
       sink: mInfoWindowStream.sink,
       xFrontPadding: widget.xFrontPadding,
-      isTrendLine: widget.isTrendLine, //For TrendLine
-      selectY: mSelectY, //For TrendLine
+      isTrendLine: widget.isTrendLine,
+      //For TrendLine
+      selectY: mSelectY,
+      //For TrendLine
       datas: widget.datas,
       scaleX: mScaleX,
       scrollX: mScrollX,
@@ -182,7 +197,8 @@ class _KChartWidgetState extends State<KChartWidget>
         return RawGestureDetector(
           gestures: {
             // Registering a ScaleGestureRecognizer to handle scale gestures
-            ScaleGestureRecognizer: GestureRecognizerFactoryWithHandlers<ScaleGestureRecognizer>(
+            ScaleGestureRecognizer: GestureRecognizerFactoryWithHandlers<
+                ScaleGestureRecognizer>(
                   () => ScaleGestureRecognizer(),
                   (ScaleGestureRecognizer instance) {
                 instance
@@ -205,26 +221,28 @@ class _KChartWidgetState extends State<KChartWidget>
               },
             ),
             // Registering a HorizontalDragGestureRecognizer to handle horizontal drag gestures
-            HorizontalDragGestureRecognizer: GestureRecognizerFactoryWithHandlers<HorizontalDragGestureRecognizer>(
+            HorizontalDragGestureRecognizer: GestureRecognizerFactoryWithHandlers<
+                HorizontalDragGestureRecognizer>(
                   () => HorizontalDragGestureRecognizer(),
                   (HorizontalDragGestureRecognizer instance) {
                 instance
-                ..onDown = (details){
-                  if(pointerCount > 1 ){
-                    return;
+                  ..onDown = (details) {
+                    if (pointerCount > 1) {
+                      return;
+                    }
+                    isOnTap = false;
+                    _stopAnimation();
+                    _onDragChanged(true);
                   }
-                  isOnTap = false;
-                  _stopAnimation();
-                  _onDragChanged(true);
-                }
                   ..onUpdate = (details) {
-                    if(pointerCount > 1 ){
+                    if (pointerCount > 1) {
                       return;
                     }
                     if (isScale || isLongPress) return;
-                    mScrollX = ((details.primaryDelta ?? 0) / mScaleX + mScrollX)
-                        .clamp(0.0, ChartPainter.maxScrollX)
-                        .toDouble();
+                    mScrollX =
+                        ((details.primaryDelta ?? 0) / mScaleX + mScrollX)
+                            .clamp(0.0, ChartPainter.maxScrollX)
+                            .toDouble();
                     notifyChanged();
                   }
                   ..onEnd = (details) {
@@ -243,14 +261,21 @@ class _KChartWidgetState extends State<KChartWidget>
               // if (!widget.isTrendLine && widget.onSecondaryTap != null && _painter.isInSecondaryRect(details.localPosition)) {
               //   widget.onSecondaryTap!();
               // }
-          
+
               if (!widget.isTrendLine &&
                   _painter.isInMainRect(details.localPosition)) {
                 isOnTap = true;
+
                 if (mSelectX != details.localPosition.dx &&
                     widget.isTapShowInfoDialog) {
                   mSelectX = details.localPosition.dx;
-                  notifyChanged();
+
+                  longPressTriggered = false;
+                  _timer?.cancel();
+
+                  Future.delayed(Duration(milliseconds: 12500),(){
+                    notifyChanged();
+                  });
                 }
               }
               if (widget.isTrendLine && !isLongPress && enableCordRecord) {
@@ -260,11 +285,12 @@ class _KChartWidgetState extends State<KChartWidget>
                   lines.add(TrendLine(
                       p1, Offset(-1, -1), trendLineMax!, trendLineScale!));
                 }
-          
+
                 if (waitingForOtherPairofCords) {
                   var a = lines.last;
                   lines.removeLast();
-                  lines.add(TrendLine(a.p1, p1, trendLineMax!, trendLineScale!));
+                  lines.add(
+                      TrendLine(a.p1, p1, trendLineMax!, trendLineScale!));
                   waitingForOtherPairofCords = false;
                 } else {
                   waitingForOtherPairofCords = true;
@@ -315,6 +341,18 @@ class _KChartWidgetState extends State<KChartWidget>
             //   _lastScale = mScaleX;
             // },
             onLongPressStart: (details) {
+              _timer?.cancel();
+              _longPressStartTime = DateTime.now();
+              longPressTriggered = false;
+              // print("notifyChanged: onLongPressStart");
+              // _timer = Timer(
+              //     Duration(milliseconds: widget.isLongFocusDurationTime*2), () {
+              //   // notifyChanged();
+              //   longPressTriggered = true;
+              //
+              //   // print("notifyChanged: onLongPressStart - 2");
+              // });
+
               isOnTap = false;
               isLongPress = true;
               if ((mSelectX != details.localPosition.dx ||
@@ -337,6 +375,19 @@ class _KChartWidgetState extends State<KChartWidget>
               }
             },
             onLongPressMoveUpdate: (details) {
+              var longPressTemp =
+              (_longPressStartTime?.millisecondsSinceEpoch ?? 0);
+              if (DateTime
+                  .now()
+                  .millisecondsSinceEpoch - longPressTemp >=
+                  500) {
+                longPressTriggered = true;
+                notifyChanged();
+              } else {
+                // longPressTriggered = false;
+                // notifyChanged();
+              }
+
               if ((mSelectX != details.localPosition.dx ||
                   mSelectY != details.globalPosition.dy) &&
                   !widget.isTrendLine) {
@@ -355,10 +406,22 @@ class _KChartWidgetState extends State<KChartWidget>
               }
             },
             onLongPressEnd: (details) {
+              // _timer?.cancel();
               isLongPress = false;
               enableCordRecord = true;
-              mInfoWindowStream.sink.add(null);
-              notifyChanged();
+
+              // # 短按需设置为0
+              if (widget.isLongFocusDurationTime == 0) {
+                mInfoWindowStream.sink.add(null);
+                notifyChanged();
+              }
+
+              if (!longPressTriggered) {
+                notifyChanged();
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  mInfoWindowStream.sink.add(null);
+                });
+              }
             },
             child: Stack(
               children: <Widget>[
@@ -366,7 +429,8 @@ class _KChartWidgetState extends State<KChartWidget>
                   size: Size(double.infinity, baseDimension.mDisplayHeight),
                   painter: _painter,
                 ),
-                if (widget.showInfoDialog) _buildInfoDialog()
+                //#十字光标长按0.5秒后才触发 -----------------------------------------------》》》》》 !! 关键 ！！ （isLongFocusDurationTime: 500/0 和 isLongFocus：true/false 切换）
+                if (widget.showInfoDialog && (widget.isLongFocusDurationTime == 0 || longPressTriggered)) _buildInfoDialog()
               ],
             ),
           ),
@@ -398,7 +462,7 @@ class _KChartWidgetState extends State<KChartWidget>
     aniX = null;
     aniX = Tween<double>(begin: mScrollX, end: x * widget.flingRatio + mScrollX)
         .animate(CurvedAnimation(
-            parent: _controller!.view, curve: widget.flingCurve));
+        parent: _controller!.view, curve: widget.flingCurve));
     aniX!.addListener(() {
       mScrollX = aniX!.value;
       if (mScrollX <= 0) {
@@ -434,10 +498,25 @@ class _KChartWidgetState extends State<KChartWidget>
     return StreamBuilder<InfoWindowEntity?>(
       stream: mInfoWindowStream.stream,
       builder: (context, snapshot) {
-        if ((!isLongPress && !isOnTap) ||
-            widget.isLine == true ||
-            !snapshot.hasData ||
-            snapshot.data?.kLineEntity == null) return SizedBox();
+        if (widget.isLongFocusDurationTime == 0 &&
+            ((!isLongPress && !isOnTap) ||
+                widget.isLine == true ||
+                !snapshot.hasData ||
+                snapshot.data?.kLineEntity == null)) {
+          return SizedBox();
+        }
+        if (widget.isLongFocusDurationTime != 0 &&
+            (!longPressTriggered || widget.isLine == true
+                // ||
+                // !snapshot.hasData ||
+                // snapshot.data?.kLineEntity == null
+            )) return SizedBox();
+        if (widget.isLongFocusDurationTime != 0 && !longPressTriggered &&
+            snapshot.data == null) {
+          return SizedBox.shrink();
+        }
+        if (snapshot.data == null) return SizedBox.shrink();
+
         KLineEntity entity = snapshot.data!.kLineEntity;
         final dialogWidth = mWidth / 2.7;
         if (snapshot.data!.isLeft) {

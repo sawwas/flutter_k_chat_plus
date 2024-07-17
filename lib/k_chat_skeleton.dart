@@ -6,9 +6,11 @@ import 'package:shimmer/shimmer.dart';
 
 //# K 线骨架屏
 class KChartSkeleton extends StatefulWidget {
+  final double width, height;
   final bool themeColor;
 
-  const KChartSkeleton({Key? key, this.themeColor = false}) : super(key: key);
+  const KChartSkeleton({Key? key, this.themeColor = false, this.width = double
+      .infinity, this.height = 210.0}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -24,11 +26,11 @@ class _KChartSkeletonState extends State<KChartSkeleton> {
       child: Shimmer.fromColors(
         baseColor: Colors.grey[800]!,
         highlightColor:
-            widget.themeColor ? Color(0xFF000000) : Color(0xFFF2F2F2),
+        widget.themeColor ? Color(0xFF000000) : Color(0xFFF2F2F2),
         period: Duration(seconds: 2),
         child: Container(
-          width: double.infinity,
-          height: 210,
+          width: widget.width,
+          height: widget.height,
           color: Colors.transparent,
           child: CustomPaint(
             painter: SkeletonChartPainter(),

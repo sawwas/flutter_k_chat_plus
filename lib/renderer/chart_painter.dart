@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:k_chart_plus/utils/number_util.dart';
 import '../entity/info_window_entity.dart';
 import '../entity/k_line_entity.dart';
+import '../k_chart_widget.dart';
 import '../utils/date_format_util.dart';
 import 'base_chart_painter.dart';
 import 'base_chart_renderer.dart';
@@ -199,8 +200,13 @@ class ChartPainter extends BaseChartPainter {
       });
     }
 
-    if ((isLongPress == true || (isTapShowInfoDialog && isOnTap)) &&
-        isTrendLine == false) {
+    if (this.chartStyle.isLongFocus &&
+        ((isLongPress == true || (isTapShowInfoDialog && longPressTriggered)) &&
+            isTrendLine == false)) {
+      drawCrossLine(canvas, size);
+    } else if (!this.chartStyle.isLongFocus &&
+        ((isLongPress == true || (isTapShowInfoDialog && isOnTap)) &&
+            isTrendLine == false)) {
       drawCrossLine(canvas, size);
     }
     if (isTrendLine == true) drawTrendLines(canvas, size);
@@ -337,7 +343,10 @@ class ChartPainter extends BaseChartPainter {
   @override
   void drawText(Canvas canvas, KLineEntity data, double x) {
     //Long press to display the data in the press
-    if (isLongPress || (isTapShowInfoDialog && isOnTap)) {
+    if (this.chartStyle.isLongFocus && (isLongPress || (isTapShowInfoDialog && longPressTriggered))) {
+      var index = calculateSelectedX(selectX);
+      data = getItem(index);
+    }else if (!this.chartStyle.isLongFocus && (isLongPress || (isTapShowInfoDialog && isOnTap))) {
       var index = calculateSelectedX(selectX);
       data = getItem(index);
     }

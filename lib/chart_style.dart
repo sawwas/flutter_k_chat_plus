@@ -96,6 +96,7 @@ class ChartColors {
         return ma5Color;
     }
   }
+
 //EMA
   /// get EMA color via index
   Color getEMAColor(int index) {
@@ -104,7 +105,7 @@ class ChartColors {
         return ma10Color;
       case 2:
         return ma30Color;
-        case 3:
+      case 3:
         return Colors.blueAccent;
       default:
         return ma5Color;
@@ -171,7 +172,6 @@ class ChartColors {
     ///The color of the maximum and minimum values in the current display
     this.maxColor = const Color(0xFF222223),
     this.minColor = const Color(0xFF222223),
-
     this.sizeText = 10.0,
   });
 }
@@ -198,6 +198,14 @@ class ChartStyle {
 
   // 是否显示策略类型EMA
   bool isShowEma = true;
+
+  // 是否显示策略类型底部的MA标题
+  bool isShowBottomMa = true;
+
+  // 是否显示策略类型底部的MA柱状图线段
+  bool showMAVolume = true;
+
+
 
   double bottomPadding = 20.0;
 
@@ -232,7 +240,9 @@ class ChartStyle {
 
   bool isFocusCloseText = true;
 
-
   ///customize the time below
   List<String>? dateTimeFormat;
+
+  //# 十字光标长按 / 短按切换 0.5秒后才触发
+  bool isLongFocus = false;
 }

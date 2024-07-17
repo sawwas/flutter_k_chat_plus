@@ -34,12 +34,12 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
                 : this.chartColors.dnColor);
     }
 
-    if (lastPoint.MA5Volume != 0) {
+    if (this.chartStyle.showMAVolume && lastPoint.MA5Volume != 0) {
       drawLine(lastPoint.MA5Volume, curPoint.MA5Volume, canvas, lastX, curX,
           this.chartColors.ma5Color);
     }
 
-    if (lastPoint.MA10Volume != 0) {
+    if (this.chartStyle.showMAVolume && lastPoint.MA10Volume != 0) {
       drawLine(lastPoint.MA10Volume, curPoint.MA10Volume, canvas, lastX, curX,
           this.chartColors.ma10Color);
     }
@@ -55,12 +55,13 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
         children: [
           TextSpan(
               text: "VOL:${NumberUtil.format(data.vol)}    ",
-              style: getTextStyle(this.chartColors.volColor)),
-          if (data.MA5Volume.notNullOrZero)
+              // style: getTextStyle(this.chartColors.volColor)),
+              style: getTextStyle(this.chartColors.infoWindowTitleColor.withOpacity(0.3))),
+          if (data.MA5Volume.notNullOrZero && this.chartStyle.isShowBottomMa)
             TextSpan(
                 text: "MA5:${NumberUtil.format(data.MA5Volume!)}    ",
                 style: getTextStyle(this.chartColors.ma5Color)),
-          if (data.MA10Volume.notNullOrZero)
+          if (data.MA10Volume.notNullOrZero  && this.chartStyle.isShowBottomMa)
             TextSpan(
                 text: "MA10:${NumberUtil.format(data.MA10Volume!)}    ",
                 style: getTextStyle(this.chartColors.ma10Color)),

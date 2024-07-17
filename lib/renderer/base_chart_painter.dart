@@ -135,7 +135,10 @@ abstract class BaseChartPainter extends CustomPainter {
       drawMaxAndMin(canvas);
       drawNowPrice(canvas);
 
-      if (isLongPress == true || (isTapShowInfoDialog && isOnTap)) {
+      if (this.chartStyle.isLongFocus && (isLongPress == true || (isTapShowInfoDialog && longPressTriggered))){
+        drawCrossLineText(canvas, size);
+      }
+      else if (!this.chartStyle.isLongFocus && (isLongPress == true || (isTapShowInfoDialog && isOnTap))) {
         drawCrossLineText(canvas, size);
       }
     }
