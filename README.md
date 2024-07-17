@@ -1,4 +1,4 @@
-# K Chart Plus Package
+# K Chart Plus Package Deeping
 
 ## Feature
 
@@ -7,6 +7,7 @@
 ### 2024-07-17 更新EMA指标
 
 ### 2024-07-16 骨架屏功能
+
 
 Maybe this is the best k chart in Flutter.Support drag,scale,long press,fling.And easy to use.
 
@@ -24,9 +25,9 @@ k_chart_plus: ^1.0.2
 
 > If you don't want to support selecting multiple secondary states, you need to use: 
 > ```
-> k_chart_plus:
+> flutter_k_chat_plus:
 >    git:
->      url: https://github.com/TrangLeQuynh/k_chart_plus
+>      url: https://github.com/sawwas/flutter_k_chat_plus
 >      ref: single #branch name
 > ```
 >
@@ -122,6 +123,8 @@ KChartWidget(
 ```
 
 ### Thanks
+
+[TrangLeQuynh/k_chart_plus](https://github.com/TrangLeQuynh/k_chart_plus)
 
 [gwhcn/flutter_k_chart](https://github.com/gwhcn/flutter_k_chart)
 
