@@ -1,4 +1,4 @@
-import 'dart:math';
+// import 'dart:math';
 
 //EMA
 List<double> calculateEMA(List<double> prices, int period) {

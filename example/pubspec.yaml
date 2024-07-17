@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.0.0
-  k_chart_plus:
+  k_chart_plus_deeping:
     path: ../
   shimmer: ^3.0.0
 

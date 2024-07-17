@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import '../entity/index.dart';
-import '../extends_futures/ema_indicator.dart';
+// import '../extends_futures/ema_indicator.dart';
 
 class DataUtil {
   static calculate(List<KLineEntity> dataList,
