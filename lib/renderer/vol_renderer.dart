@@ -9,13 +9,13 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
   VolRenderer(Rect mainRect, double maxValue, double minValue,
       double topPadding, int fixedLength, this.chartStyle, this.chartColors)
       : super(
-    chartRect: mainRect,
-    maxValue: maxValue,
-    minValue: minValue,
-    topPadding: topPadding,
-    fixedLength: fixedLength,
-    gridColor: chartColors.gridColor,
-  ) {
+          chartRect: mainRect,
+          maxValue: maxValue,
+          minValue: minValue,
+          topPadding: topPadding,
+          fixedLength: fixedLength,
+          gridColor: chartColors.gridColor,
+        ) {
     mVolWidth = this.chartStyle.volWidth;
   }
 
@@ -53,22 +53,29 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
     if (this.chartStyle.isShowStrategyTypeBottom) {
       TextSpan span = TextSpan(
         children: [
+          /// 成交量
           TextSpan(
-              text: "VOL:${NumberUtil.format(data.vol)}    ",
+              text: "VOL:",
+              // text: "VOL:${NumberUtil.format(data.vol)}    ",
               // style: getTextStyle(this.chartColors.volColor)),
-              style: getTextStyle(this.chartColors.infoWindowTitleColor.withOpacity(0.3))),
+              style: getTextStyle(
+                  this.chartColors.infoWindowTitleColor.withOpacity(0.5))),
+          formatValueSpan(
+              (double.tryParse('${data.vol}') ?? 0.0),
+              getTextStyle(
+                  this.chartColors.infoWindowTitleColor.withOpacity(0.5))),
           if (data.MA5Volume.notNullOrZero && this.chartStyle.isShowBottomMa)
             TextSpan(
                 text: "MA5:${NumberUtil.format(data.MA5Volume!)}    ",
                 style: getTextStyle(this.chartColors.ma5Color)),
-          if (data.MA10Volume.notNullOrZero  && this.chartStyle.isShowBottomMa)
+          if (data.MA10Volume.notNullOrZero && this.chartStyle.isShowBottomMa)
             TextSpan(
                 text: "MA10:${NumberUtil.format(data.MA10Volume!)}    ",
                 style: getTextStyle(this.chartColors.ma10Color)),
         ],
       );
-      TextPainter tp = TextPainter(
-          text: span, textDirection: TextDirection.ltr);
+      TextPainter tp =
+          TextPainter(text: span, textDirection: TextDirection.ltr);
       tp.layout();
       tp.paint(canvas, Offset(x, chartRect.top - topPadding));
     }
@@ -76,14 +83,13 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
 
   @override
   void drawVerticalText(canvas, textStyle, int gridRows) {
-    if (this.chartStyle.isShowStrategyTypeBottom) {
+    if (this.chartStyle.isShowStrategyTypeBottomForMaxVol) {
       TextSpan span =
-      TextSpan(text: "${NumberUtil.format(maxValue)}", style: textStyle);
-      TextPainter tp = TextPainter(
-          text: span, textDirection: TextDirection.ltr);
+          TextSpan(text: "\n\n\n${NumberUtil.format(maxValue)}", style: textStyle);
+      TextPainter tp =
+          TextPainter(text: span, textDirection: TextDirection.ltr);
       tp.layout();
-      tp.paint(
-          canvas,
+      tp.paint(canvas,
           Offset(chartRect.width - tp.width, chartRect.top - topPadding));
     }
   }

@@ -518,7 +518,7 @@ class _KChartWidgetState extends State<KChartWidget>
         if (snapshot.data == null) return SizedBox.shrink();
 
         KLineEntity entity = snapshot.data!.kLineEntity;
-        final dialogWidth = mWidth / 2.7;
+        final dialogWidth = mWidth / 2.5;
         if (snapshot.data!.isLeft) {
           return Positioned(
             top: 25,

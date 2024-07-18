@@ -1,4 +1,6 @@
 import 'dart:async' show StreamSink;
+import 'dart:math';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:k_chart_plus_deeping/utils/number_util.dart';
 import '../entity/info_window_entity.dart';
@@ -343,10 +345,12 @@ class ChartPainter extends BaseChartPainter {
   @override
   void drawText(Canvas canvas, KLineEntity data, double x) {
     //Long press to display the data in the press
-    if (this.chartStyle.isLongFocus && (isLongPress || (isTapShowInfoDialog && longPressTriggered))) {
+    if (this.chartStyle.isLongFocus &&
+        (isLongPress || (isTapShowInfoDialog && longPressTriggered))) {
       var index = calculateSelectedX(selectX);
       data = getItem(index);
-    }else if (!this.chartStyle.isLongFocus && (isLongPress || (isTapShowInfoDialog && isOnTap))) {
+    } else if (!this.chartStyle.isLongFocus &&
+        (isLongPress || (isTapShowInfoDialog && isOnTap))) {
       var index = calculateSelectedX(selectX);
       data = getItem(index);
     }
@@ -370,16 +374,31 @@ class ChartPainter extends BaseChartPainter {
       //EMA
       TextPainter tp = getTextPainter(
           // "── " + mMainLowMinValue.toStringAsFixed(fixedLength),
-          "── " + formatValue(mMainLowMinValue),
-          chartColors.minColor);
+          //   "── " + formatValue(mMainLowMinValue),
+          "── ",
+          chartColors.minColor, addTextSpan: () {
+        final realStyle = getTextStyle(chartColors.minColor);
+        final span = formatValueSpan(
+            (double.tryParse('${mMainLowMinValue}') ?? 0.0), realStyle);
+
+        return span;
+      }, isLeft: true);
       tp.paint(
           canvas, Offset(x + this.chartStyle.leftPadding, y - tp.height / 2));
     } else {
       //EMA
       TextPainter tp = getTextPainter(
           // mMainLowMinValue.toStringAsFixed(fixedLength) + " ──",
-          formatValue(mMainLowMinValue) + " ──",
-          chartColors.minColor);
+          //   formatValue(mMainLowMinValue) + " ──",
+          " ──",
+          // "",
+          chartColors.minColor, addTextSpan: () {
+        final realStyle = getTextStyle(chartColors.minColor);
+        final span = formatValueSpan(
+            (double.tryParse('${mMainLowMinValue}') ?? 0.0), realStyle);
+
+        return span;
+      }, isLeft: false);
       tp.paint(
           canvas,
           Offset(
@@ -392,16 +411,30 @@ class ChartPainter extends BaseChartPainter {
       //EMA
       TextPainter tp = getTextPainter(
           // "── " + mMainHighMaxValue.toStringAsFixed(fixedLength),
-          "── " + formatValue(mMainHighMaxValue),
-          chartColors.maxColor);
+          //   "── " + formatValue(mMainHighMaxValue),
+          "── ",
+          chartColors.maxColor, addTextSpan: () {
+        final realStyle = getTextStyle(chartColors.maxColor);
+        TextSpan span = formatValueSpan(
+            (double.tryParse('${mMainHighMaxValue}') ?? 0.0), realStyle);
+
+        return span;
+      }, isLeft: true);
       tp.paint(
           canvas, Offset(x + this.chartStyle.leftPadding, y - tp.height / 2));
     } else {
       //EMA
       TextPainter tp = getTextPainter(
           // mMainHighMaxValue.toStringAsFixed(fixedLength) + " ──",
-          formatValue(mMainHighMaxValue) + " ──",
-          chartColors.maxColor);
+          //   formatValue(mMainHighMaxValue) + " ──",
+          " ──",
+          chartColors.maxColor, addTextSpan: () {
+        final realStyle = getTextStyle(chartColors.maxColor);
+        final span = formatValueSpan(
+            (double.tryParse('${mMainHighMaxValue}') ?? 0.0), realStyle);
+
+        return span;
+      }, isLeft: false);
       tp.paint(
           canvas,
           Offset(
@@ -672,12 +705,32 @@ class ChartPainter extends BaseChartPainter {
     }
   }
 
-  TextPainter getTextPainter(text, color) {
+  TextPainter getTextPainter(text, color, {addTextSpan, isLeft}) {
     if (color == null) {
       color = this.chartColors.defaultTextColor;
     }
+
+    TextSpan? spanAll;
+
     TextSpan span = TextSpan(text: "$text", style: getTextStyle(color));
-    TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
+    if (addTextSpan != null) {
+      TextSpan spanS = addTextSpan();
+      List<InlineSpan> children = [];
+      if (isLeft != null && isLeft) {
+        children.add(span);
+        children.add(spanS);
+      } else {
+        children.add(spanS);
+        children.add(span);
+      }
+      spanAll = TextSpan(children: children);
+    } else {
+      List<InlineSpan> children = [];
+      children.add(span);
+      spanAll = TextSpan(children: children);
+    }
+    TextPainter tp =
+        TextPainter(text: spanAll, textDirection: TextDirection.ltr);
     tp.layout();
     return tp;
   }

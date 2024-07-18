@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:k_chart_plus_deeping/chart_style.dart';
 import 'package:k_chart_plus_deeping/chart_translations.dart';
 import '../entity/k_line_entity.dart';
+import '../renderer/base_chart_painter.dart';
 import '../utils/date_format_util.dart';
 // import '../utils/number_util.dart';
 
@@ -30,9 +31,9 @@ class PopupInfoView extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: chartColors.selectFillColor,
-        // border: Border.all(color: chartColors.selectBorderColor, width: 0.5),
-        borderRadius:  BorderRadius.all(Radius.circular(5.0)),
-
+        //背景颜色
+        border: Border.all(color: chartColors.selectBorderColor, width: 0.5),
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
       ),
       child: SizedBox(
         width: width,
@@ -55,27 +56,30 @@ class PopupInfoView extends StatelessWidget {
       children: [
         _buildItem(chartTranslations.date, getDate(entity.time)),
         //# 手指按压显示的图层数值，Change、Change% 拿掉，Open、High、Low、Close、Volume 也按照数据格式规则来显示，Date可以先不动
+        //科学运算 下标
         _buildItem(
             chartTranslations.open, formatNumber(entity.open.toString())),
-            // chartTranslations.open, entity.open.toStringAsFixed(fixedLength)),
+        // chartTranslations.open, entity.open.toStringAsFixed(fixedLength)),
         //# 手指按压显示的图层数值，Change、Change% 拿掉，Open、High、Low、Close、Volume 也按照数据格式规则来显示，Date可以先不动
+        //科学运算 下标
         _buildItem(
             chartTranslations.high, formatNumber(entity.high.toString())),
-            // chartTranslations.high, entity.high.toStringAsFixed(fixedLength)),
+        // chartTranslations.high, entity.high.toStringAsFixed(fixedLength)),
         //# 手指按压显示的图层数值，Change、Change% 拿掉，Open、High、Low、Close、Volume 也按照数据格式规则来显示，Date可以先不动
-        _buildItem(
-            chartTranslations.low, formatNumber(entity.low.toString())),
-            // chartTranslations.low, entity.low.toStringAsFixed(fixedLength)),
+        //科学运算 下标
+        _buildItem(chartTranslations.low, formatNumber(entity.low.toString())),
+        // chartTranslations.low, entity.low.toStringAsFixed(fixedLength)),
         //# 手指按压显示的图层数值，Change、Change% 拿掉，Open、High、Low、Close、Volume 也按照数据格式规则来显示，Date可以先不动
+        //科学运算 下标
         _buildItem(
             chartTranslations.close, formatNumber(entity.close.toString())),
-            // chartTranslations.close, entity.close.toStringAsFixed(fixedLength)),
-        if(chartTranslations.changeAmount.isNotEmpty)
-        _buildColorItem(chartTranslations.changeAmount,
-            upDown.toStringAsFixed(fixedLength), upDown > 0),
-        if(chartTranslations.change.isNotEmpty)
-        _buildColorItem(chartTranslations.change,
-            '${upDownPercent.toStringAsFixed(2)}%', upDownPercent > 0),
+        // chartTranslations.close, entity.close.toStringAsFixed(fixedLength)),
+        if (chartTranslations.changeAmount.isNotEmpty)
+          _buildColorItem(chartTranslations.changeAmount,
+              upDown.toStringAsFixed(fixedLength), upDown > 0),
+        if (chartTranslations.change.isNotEmpty)
+          _buildColorItem(chartTranslations.change,
+              '${upDownPercent.toStringAsFixed(2)}%', upDownPercent > 0),
         //# 手指按压显示的图层数值，Change、Change% 拿掉，Open、High、Low、Close、Volume 也按照数据格式规则来显示，Date可以先不动
         _buildItem(chartTranslations.vol, formatNumber(entity.vol.toString())),
         // _buildItem(chartTranslations.vol, NumberUtil.format(entity.vol)),
@@ -100,22 +104,36 @@ class PopupInfoView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text(
-            label,
-            style: TextStyle(
-              color: chartColors.infoWindowTitleColor,
-              fontSize: chartColors.sizeText,
-            ),
-          ),
-          Expanded(
-            child: Text(
-              info,
+          if (label != "")
+            Text(
+              label,
               style: TextStyle(
-                  color: textColor ?? chartColors.infoWindowNormalColor,
-                  fontSize: chartColors.sizeText),
-              textAlign: TextAlign.right,
+                color: chartColors.infoWindowTitleColor,
+                fontSize: chartColors.sizeText,
+              ),
             ),
-          ),
+          Expanded(
+              //科学计算 下标
+              child: (double.tryParse('${info}') ?? -987654321) == -987654321
+                  ? Text(
+                      info,
+                      style: TextStyle(
+                          color: textColor ?? chartColors.infoWindowNormalColor,
+                          fontSize: chartColors.sizeText),
+                      textAlign: label == chartTranslations.date
+                          ? TextAlign.left
+                          : TextAlign.right,
+                    )
+                  : RichText(
+                      textAlign: TextAlign.right,
+                      text: formatValueSpan(
+                          (double.tryParse('${info}') ?? 0.0),
+                          TextStyle(
+                              color: textColor ??
+                                  chartColors.infoWindowNormalColor,
+                              fontSize: chartColors.sizeText,
+                              fontWeight: FontWeight.w700)),
+                    )),
         ],
       ),
     );
@@ -131,7 +149,6 @@ class PopupInfoView extends StatelessWidget {
       );
 }
 
-
 //# 手指按压显示的图层数值，Change、Change% 拿掉，Open、High、Low、Close、Volume 也按照数据格式规则来显示，Date可以先不动
 //# 数据格式规则
 //
@@ -144,12 +161,15 @@ String formatNumber(String input) {
   }
 
   // 处理整数部分非零的情况
-  if (num >= 1 || num <= -1) {
-    return formatWithCommas(num);
+  if (num >= 1) {
+    ///三位一取 逗号
+    // return formatWithCommas(num);
+    return '$num';
   }
   // 处理整数部分为零的情况
   else {
-    return formatDecimal(num);
+    return '$num';
+    // return formatDecimal(num);
   }
 }
 
@@ -178,7 +198,8 @@ String formatDecimal(double num) {
   String numStr = num.toStringAsExponential(4);
   List<String> parts = numStr.split('e');
 
-  String base = parts[0].replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+  String base =
+      parts[0].replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
   int exponent = int.parse(parts[1]);
 
   if (exponent < -4) {

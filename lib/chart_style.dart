@@ -196,6 +196,9 @@ class ChartStyle {
   // 是否显示策略类型底部
   bool isShowStrategyTypeBottom = true;
 
+  // 是否显示策略类型底部最大成交量
+  bool isShowStrategyTypeBottomForMaxVol = true;
+
   // 是否显示策略类型EMA
   bool isShowEma = true;
 

@@ -1,6 +1,12 @@
+import 'dart:math';
+
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 export '../chart_style.dart';
+import 'package:k_chart_plus_deeping/decimal_extension.dart';
+
 
 abstract class BaseChartRenderer<T> {
   double maxValue, minValue;
@@ -111,7 +117,10 @@ abstract class BaseChartRenderer<T> {
 }
 
 //EMA
-String formatValue(double value) {
+String formatValue(double? value) {
+  if (value == null) {
+    return '';
+  }
   if (value < 1e-6) {
     // 对于非常小的数值，显示足够多的小数位
     return value.toStringAsFixed(13).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');
@@ -130,3 +139,31 @@ String formatValue(double value) {
     return value.toStringAsFixed(1).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');
   }
 }
+
+// String formatValue(double? valueOrigin) {
+//   Decimal? value = Decimal.fromJson('${valueOrigin?? 0.0}');
+//   if (value == null) return '-';
+//   if (value < Decimal.parse('0.01')) {
+//     final temp = value.toString().split('.');
+//     if (temp.length != 2) {
+//       return value.dollarValue(2);
+//     }
+//     var index = 0;
+//     for (; index < temp[1].length; index++) {
+//       if (temp[1][index] != '0') {
+//         break;
+//       }
+//     }
+//     final remain = temp[1].replaceRange(0, index, '');
+//     return '\$0.0${index}${remain.substring(0, min(remain.length, 4))}';
+//   }
+//   if (value >= Decimal.fromInt(1000000000)) {
+//     return '${(value / Decimal.fromInt(1000000000)).toDecimal().dollarValue(2)}B';
+//   } else if (value >= Decimal.fromInt(1000000)) {
+//     return '${(value / Decimal.fromInt(1000000)).toDecimal().dollarValue(2)}M';
+//   } else if (value >= Decimal.fromInt(1000)) {
+//     return '${(value / Decimal.fromInt(1000)).toDecimal().dollarValue(2)}K';
+//   } else {
+//     return value.dollarValue(2);
+//   }
+// }

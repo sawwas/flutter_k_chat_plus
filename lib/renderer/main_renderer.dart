@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../entity/candle_entity.dart';
 import '../k_chart_widget.dart' show MainState;
+import 'base_chart_painter.dart';
 import 'base_chart_renderer.dart';
 
 enum VerticalTextAlignment { left, right }
@@ -81,7 +82,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       // span = TextSpan(
       //   children: _createMATextSpan(data),
       // );
-      String value = '${format((data.maValueList??[0])[0])}';
+      String value = '${format((data.maValueList ?? [0])[0])}';
       span = TextSpan(
         children: [
           TextSpan(
@@ -127,14 +128,28 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     for (int i = 0; i < (data.maValueList?.length ?? 0); i++) {
       if (data.maValueList?[i] != 0) {
         String value = '${format(data.maValueList![i])}';
-        var item = TextSpan(
-            text: "MA${maDayList[i]}:$value    ",
+        //
+        // var item = TextSpan(
+        //     text: "MA${maDayList[i]}:$value    ",
+        //     style: getTextStyle(this.chartColors.getMAColor(i)));
+
+        //科学计算 下标
+        List<InlineSpan> children = [];
+
+        TextSpan span = TextSpan(
+            text: "MA${maDayList[i]}:",
             style: getTextStyle(this.chartColors.getMAColor(i)));
+        final spanS = formatValueSpan(
+            (double.tryParse('${data.maValueList![i]}') ?? 0.0),
+            getTextStyle(this.chartColors.getMAColor(i)));
+        children.add(span);
+        children.add(spanS);
+        TextSpan? item = TextSpan(children: children);
+
         result.add(item);
         if (value.length > 13 && i > 0 && i % 1 == 0)
           result.add(TextSpan(text: '\n'));
       }
-
     }
     return result;
   }
@@ -144,12 +159,27 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     List<InlineSpan> result = [];
     for (int i = 0; i < (data.emaValueList?.length ?? 0); i++) {
       if (data.emaValueList?[i] != 0) {
+        // String value = '${format(data.emaValueList![i])}';
         String value = '${format(data.emaValueList![i])}';
-        var item = TextSpan(
-            text: "EMA${emaValueList[i]}:$value    ",
+        // var item = TextSpan(
+        //     text: "EMA${emaValueList[i]}:$value    ",
+        //     style: getTextStyle(this.chartColors.getEMAColor(i)));
+
+        //科学计算 下标
+        List<InlineSpan> children = [];
+
+        TextSpan span = TextSpan(
+            text: "EMA${emaValueList[i]}:",
             style: getTextStyle(this.chartColors.getEMAColor(i)));
-        if ((value.length > 13 && i > 0 && i % 2 == 0) || (value.length <= 13 && i > 2))
-          result.add(TextSpan(text: '\n'));
+        final spanS = formatValueSpan(
+            (double.tryParse('${data.emaValueList![i]}') ?? 0.0),
+            getTextStyle(this.chartColors.getEMAColor(i)));
+        children.add(span);
+        children.add(spanS);
+        TextSpan? item = TextSpan(children: children);
+
+        if ((value.length > 13 && i > 0 && i % 2 == 0) ||
+            (value.length <= 13 && i > 2)) result.add(TextSpan(text: '\n'));
         result.add(item);
         // if (i == 2) {
         //   result.add(TextSpan(text: '\n'));
@@ -332,9 +362,15 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     double rowSpace = chartRect.height / gridRows;
     for (var i = 0; i <= gridRows; ++i) {
       double value = (gridRows - i) * rowSpace / scaleY + minValue;
-      TextSpan span = TextSpan(
-          text: "${format(value, isNotPoint: this.chartStyle.isNotPoint)}",
-          style: textStyle);
+
+      // TextSpan span = TextSpan(
+      //     text: "${format(value, isNotPoint: this.chartStyle.isNotPoint)}",
+      //     style: textStyle);
+
+      //右侧文字科学计数
+      final realStyle = getTextStyle(chartColors.maxColor);
+      TextSpan span = formatValueSpan(value, realStyle);
+
       TextPainter tp =
           TextPainter(text: span, textDirection: TextDirection.ltr);
       tp.layout();
