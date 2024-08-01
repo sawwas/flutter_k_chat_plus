@@ -381,7 +381,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
           offsetX = 0;
           break;
         case VerticalTextAlignment.right:
-          offsetX = chartRect.width - tp.width;
+          offsetX = chartRect.width - tp.width - this.chartStyle.rightPadding;
           break;
       }
 

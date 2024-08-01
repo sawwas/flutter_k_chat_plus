@@ -181,6 +181,8 @@ class ChartStyle {
 
   double leftPadding = 0.0;
 
+  double rightPadding = 0.0;
+
   // 是否保留小数点 - 左侧刻度
   bool isNotPoint = false;
 
