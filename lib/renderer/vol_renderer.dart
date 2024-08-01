@@ -35,14 +35,19 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
       if (curPoint.vol != 0) {
 
         canvas.drawRect(
-            Rect.fromLTRB(curX - mVolWidth, topLeft, curX, bottom),
+            Rect.fromLTRB(curX - mVolWidth, topLeft, curX - 1, bottom),
             chartPaint
               ..color = curPoint.close > curPoint.open || curPoint.open < curPoint.vol
                   ? this.chartColors.dnColor
                   : this.chartColors.upColor);
 
         canvas.drawRect(
-            Rect.fromLTRB(curX, topRight, curX + mVolWidth, bottom),
+            Rect.fromLTRB(curX - 1 , topLeft, curX + 1, bottom),
+            chartPaint
+              ..color = Colors.transparent);
+
+        canvas.drawRect(
+            Rect.fromLTRB(curX + 1 , topRight, curX + mVolWidth, bottom),
             chartPaint
               ..color = curPoint.close > curPoint.open || curPoint.close >= curPoint.vol
                   ? this.chartColors.upColor
