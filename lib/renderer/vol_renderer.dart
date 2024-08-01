@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:k_chart_plus_deeping/k_chart_plus.dart';
+import 'dart:math' as Math;
 
 class VolRenderer extends BaseChartRenderer<VolumeEntity> {
   late double mVolWidth;
@@ -22,17 +23,49 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
   @override
   void drawChart(VolumeEntity lastPoint, VolumeEntity curPoint, double lastX,
       double curX, Size size, Canvas canvas) {
-    double r = mVolWidth / 2;
-    double top = getVolY(curPoint.vol);
-    double bottom = chartRect.bottom;
-    if (curPoint.vol != 0) {
-      canvas.drawRect(
-          Rect.fromLTRB(curX - r, top, curX + r, bottom),
-          chartPaint
-            ..color = curPoint.close > curPoint.open
-                ? this.chartColors.upColor
-                : this.chartColors.dnColor);
+
+    if(this.chartStyle.volisDouble){
+      /// 双成交量
+      double left = curPoint.vol * curPoint.open * 1.2 / (curPoint.close + curPoint.open);
+      double right = curPoint.vol * (curPoint.close + curPoint.open - curPoint.open * 1.2) / (curPoint.close + curPoint.open);
+      double r = mVolWidth / 2;
+      double topLeft = getVolY(left);
+      double topRight = getVolY(right);
+      double bottom = chartRect.bottom;
+      if (curPoint.vol != 0) {
+
+        canvas.drawRect(
+            Rect.fromLTRB(curX - mVolWidth, topLeft, curX, bottom),
+            chartPaint
+              ..color = curPoint.close > curPoint.open || curPoint.open < curPoint.vol
+                  ? this.chartColors.dnColor
+                  : this.chartColors.upColor);
+
+        canvas.drawRect(
+            Rect.fromLTRB(curX, topRight, curX + mVolWidth, bottom),
+            chartPaint
+              ..color = curPoint.close > curPoint.open || curPoint.close >= curPoint.vol
+                  ? this.chartColors.upColor
+                  : this.chartColors.dnColor);
+      }
+    }else{
+      /// 单成交量
+      double r = mVolWidth / 2;
+      double top = getVolY(curPoint.vol);
+      double bottom = chartRect.bottom;
+      if (curPoint.vol != 0) {
+        canvas.drawRect(
+            Rect.fromLTRB(curX - r, top, curX + r, bottom),
+            chartPaint
+              ..color = curPoint.close > curPoint.open
+                  ? this.chartColors.upColor
+                  : this.chartColors.dnColor);
+      }
+
     }
+
+
+
 
     if (this.chartStyle.showMAVolume && lastPoint.MA5Volume != 0) {
       drawLine(lastPoint.MA5Volume, curPoint.MA5Volume, canvas, lastX, curX,

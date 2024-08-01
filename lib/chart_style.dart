@@ -224,6 +224,9 @@ class ChartStyle {
   ///vol column width
   double volWidth = 8.5;
 
+  ///vol column is double
+  bool volisDouble = false;
+
   ///macd column width
   double macdWidth = 1.2;
 
