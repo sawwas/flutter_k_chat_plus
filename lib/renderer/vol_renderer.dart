@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:k_chart_plus_deeping/k_chart_plus.dart';
-import 'dart:math' as Math;
 
 class VolRenderer extends BaseChartRenderer<VolumeEntity> {
   late double mVolWidth;
@@ -28,7 +27,7 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
       /// 双成交量
       double left = curPoint.vol * curPoint.open * 1.2 / (curPoint.close + curPoint.open);
       double right = curPoint.vol * (curPoint.close + curPoint.open - curPoint.open * 1.2) / (curPoint.close + curPoint.open);
-      double r = mVolWidth / 2;
+      // double r = mVolWidth / 2;
       double topLeft = getVolY(left);
       double topRight = getVolY(right);
       double bottom = chartRect.bottom;

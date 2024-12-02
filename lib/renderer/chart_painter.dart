@@ -1,6 +1,4 @@
 import 'dart:async' show StreamSink;
-import 'dart:math';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:k_chart_plus_deeping/utils/number_util.dart';
 import '../entity/info_window_entity.dart';

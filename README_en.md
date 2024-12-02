@@ -1,8 +1,5 @@
 # K Chart Plus Package Deeping
 
-
-[简体中文](README_zh.md) | [English](README_en.md)
-
 ## Feature
 
 ### 2024-08-01 Update: Display double volume

@@ -1,11 +1,7 @@
-import 'dart:math';
 
-import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 export '../chart_style.dart';
-import 'package:k_chart_plus_deeping/decimal_extension.dart';
 
 
 abstract class BaseChartRenderer<T> {

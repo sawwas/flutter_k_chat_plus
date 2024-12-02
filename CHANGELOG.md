@@ -1,10 +1,15 @@
-## [1.0.2]
 
-* Refactor docs
+## [1.0.0-tomo+5] 
 
-## [1.0.1]
+* Update: Display double volume
 
-* Constructor - chart color
+## [1.0.0-tomo+4] 
+
+* Update: Gesture zoom functionality ｜ Scientific notation support
+
+## [1.0.0-tomo+3] 
+
+* Update: EMA indicator added
 
 ## [1.0.0]
 

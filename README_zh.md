@@ -1,17 +1,15 @@
 # K Chart Plus Package Deeping
 
-
-[简体中文](README_zh.md) | [English](README_en.md)
-
 ## Feature
 
-### 2024-08-01 Update: Display double volume
+### 2024-08-1 更新 double vol 显示
 
-### 2024-07-18 Update: Gesture zoom functionality ｜ Scientific notation support
+### 2024-07-18 更新手势缩放功能 ｜ 科学计数功能
 
-### 2024-07-17 Update: EMA indicator added
+### 2024-07-17 更新EMA指标
 
-### 2024-07-16 Update: Skeleton screen functionality
+### 2024-07-16 骨架屏功能
+
 
 Maybe this is the best k chart in Flutter.Support drag,scale,long press,fling.And easy to use.
 
