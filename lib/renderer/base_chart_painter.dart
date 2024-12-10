@@ -1,6 +1,15 @@
 import 'dart:math';
 import 'package:flutter/material.dart'
-    show Canvas, Color, CustomPainter, FontFeature, FontWeight, Rect, Size, TextSpan, TextStyle;
+    show
+        Canvas,
+        Color,
+        CustomPainter,
+        FontFeature,
+        FontWeight,
+        Rect,
+        Size,
+        TextSpan,
+        TextStyle;
 import 'package:k_chart_plus_deeping/utils/date_format_util.dart';
 import '../chart_style.dart' show ChartStyle;
 import '../entity/k_line_entity.dart';
@@ -9,17 +18,34 @@ import 'base_dimension.dart';
 export 'package:flutter/material.dart'
     show Color, required, TextStyle, Rect, Canvas, Size, CustomPainter;
 
+/// A base class for rendering chart components.
+///
+/// This class provides common functionality for painting charts,
+/// such as rendering styles, data, and helper methods.
+///
 /// BaseChartPainter
+/// Purpose: This abstract class serves as the base for specific chart painters
+/// (e.g., candlestick chart, line chart). It handles common chart drawing logic like calculating values,
+/// drawing the background, grid, and axes.
 abstract class BaseChartPainter extends CustomPainter {
   static double maxScrollX = 0.0;
+
+  ///A list of KLineEntity objects representing the chart data.
   List<KLineEntity>? datas; // data of chart
+  ///An enum indicating the type of main chart (e.g., MA, BOLL).
   MainState mainState;
 
+  ///A set of enums indicating the types of secondary indicators to display (e.g., MACD, KDJ).
   Set<SecondaryState> secondaryStateLi;
 
+  ///A boolean to control the visibility of the volume chart.
   bool volHidden;
   bool isTapShowInfoDialog;
+
+  ///Values for zooming and scrolling the chart horizontally.
   double scaleX = 1.0, scrollX = 0.0, selectX;
+
+  ///Variables related to long-press interactions.
   bool isLongPress = false;
   bool isOnTap;
   bool isLine;
@@ -33,8 +59,10 @@ abstract class BaseChartPainter extends CustomPainter {
   /// Secondary list support
   List<RenderRect> mSecondaryRectList = [];
   late double mDisplayHeight, mWidth;
+
   // padding
   double mTopPadding = 30.0, mBottomPadding = 20.0, mChildPadding = 12.0;
+
   // grid: rows - columns
   int mGridRows = 4, mGridColumns = 4;
   int mStartIndex = 0, mStopIndex = 0;
@@ -46,8 +74,10 @@ abstract class BaseChartPainter extends CustomPainter {
       mMainLowMinValue = double.maxFinite;
   int mItemCount = 0;
   double mDataLen = 0.0; // the data occupies the total length of the screen
+  ///chart style
   final ChartStyle chartStyle;
   late double mPointWidth;
+
   // format time
   List<String> mFormats = [yyyy, '-', mm, '-', dd, ' ', hH, ':', nn];
   double xFrontPadding;
@@ -120,6 +150,8 @@ abstract class BaseChartPainter extends CustomPainter {
     mWidth = size.width;
     initRect(size);
     calculateValue();
+
+    ///An abstract method to be implemented by specific chart painters to draw the actual chart elements (e.g., candlesticks, lines).
     initChartRenderer();
 
     canvas.save();
@@ -135,10 +167,12 @@ abstract class BaseChartPainter extends CustomPainter {
       drawMaxAndMin(canvas);
       drawNowPrice(canvas);
 
-      if (chartStyle.isLongFocus && (isLongPress == true || (isTapShowInfoDialog && longPressTriggered))){
+      if (chartStyle.isLongFocus &&
+          (isLongPress == true ||
+              (isTapShowInfoDialog && longPressTriggered))) {
         drawCrossLineText(canvas, size);
-      }
-      else if (!chartStyle.isLongFocus && (isLongPress == true || (isTapShowInfoDialog && isOnTap))) {
+      } else if (!chartStyle.isLongFocus &&
+          (isLongPress == true || (isTapShowInfoDialog && isOnTap))) {
         drawCrossLineText(canvas, size);
       }
     }
@@ -210,6 +244,7 @@ abstract class BaseChartPainter extends CustomPainter {
   }
 
   /// calculate values
+  /// Calculates maximum and minimum values, indices, and other data needed for drawing.
   calculateValue() {
     if (datas == null) return;
     if (datas!.isEmpty) return;
@@ -284,7 +319,7 @@ abstract class BaseChartPainter extends CustomPainter {
         min(item.vol, min(item.MA5Volume ?? 0, item.MA10Volume ?? 0)));
   }
 
-  // compute maximum and minimum of secondary value
+  /// compute maximum and minimum of secondary value
   getSecondaryMaxMinValue(int index, KLineEntity item) {
     SecondaryState secondaryState = secondaryStateLi.elementAt(index);
     switch (secondaryState) {
@@ -374,6 +409,7 @@ abstract class BaseChartPainter extends CustomPainter {
   /// @param position index value
   double getX(int position) => position * mPointWidth + mPointWidth / 2;
 
+  ///Methods for converting between screen coordinates and data indices.
   KLineEntity getItem(int position) {
     return datas![position];
     // if (datas != null) {
@@ -428,7 +464,6 @@ class RenderRect {
   RenderRect(this.mRect);
 }
 
-
 //# 科学下标
 TextSpan formatValueSpan(double? value, TextStyle style) {
   if (value == 0.00) {
@@ -457,7 +492,6 @@ TextSpan formatValueSpan(double? value, TextStyle style) {
       text: '0.0',
       // text: '\$0.0',
       children: [
-
         ///	•	FontFeature.alternativeFractions(): 使用替代分数样式。
         // 	•	FontFeature.caseSensitiveForms(): 使用大小写敏感表单样式。
         // 	•	FontFeature.characterVariant(int value): 使用字符变体。
@@ -480,8 +514,8 @@ TextSpan formatValueSpan(double? value, TextStyle style) {
                 FontFeature.oldstyleFigures(),
                 FontFeature.scientificInferiors(),
               ],
-              fontSize: style.fontSize == null ? null : style.fontSize! -
-                  3, fontWeight: FontWeight.w900), // 调整行高以模拟偏移效果
+              fontSize: style.fontSize == null ? null : style.fontSize! - 3,
+              fontWeight: FontWeight.w900), // 调整行高以模拟偏移效果
         ),
         // WidgetSpan(
         //   child: Transform.translate(
@@ -498,8 +532,7 @@ TextSpan formatValueSpan(double? value, TextStyle style) {
         //   ),
         // ),
         TextSpan(
-            text: remain.substring(0, min(remain.length, 4)),
-            style: style),
+            text: remain.substring(0, min(remain.length, 4)), style: style),
       ],
       style: style,
     );

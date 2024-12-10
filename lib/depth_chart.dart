@@ -132,7 +132,9 @@ class DepthChartPainter extends CustomPainter {
     if (mBuyData == null ||
         mBuyData!.isEmpty ||
         mSellData == null ||
-        mSellData!.isEmpty) return;
+        mSellData!.isEmpty) {
+      return;
+    }
     mMaxVolume = mBuyData![0].vol;
     mMaxVolume = max(mMaxVolume!, mSellData!.last.vol);
     mMaxVolume = mMaxVolume! * 1.05;
@@ -382,7 +384,9 @@ class DepthChartPainter extends CustomPainter {
   getTextPainter(String text) => TextPainter(
         text: TextSpan(
           text: text,
-          style: TextStyle(color: chartColors.defaultTextColor, fontSize: chartColors.sizeText),
+          style: TextStyle(
+              color: chartColors.defaultTextColor,
+              fontSize: chartColors.sizeText),
         ),
         textDirection: TextDirection.ltr,
       );
@@ -414,6 +418,7 @@ class _PopupPainter {
 
   ///getter
   double get width => max(pricePaint.width, amountPaint.width) + 2 * padding;
+
   double get height =>
       pricePaint.height + amountPaint.height + space + 2 * padding;
 
@@ -441,12 +446,14 @@ class _PopupPainter {
       text: TextSpan(
         text: "$label: ",
         style: TextStyle(
-            color: chartColors.infoWindowTitleColor, fontSize: chartColors.sizeText),
+            color: chartColors.infoWindowTitleColor,
+            fontSize: chartColors.sizeText),
         children: [
           TextSpan(
             text: content,
             style: TextStyle(
-                color: chartColors.infoWindowNormalColor, fontSize: chartColors.sizeText),
+                color: chartColors.infoWindowNormalColor,
+                fontSize: chartColors.sizeText),
           ),
         ],
       ),
