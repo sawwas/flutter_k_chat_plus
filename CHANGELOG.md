@@ -1,12 +1,4 @@
-## [1.0.0-tomo+5.2.1]
-
-* Update: fix some bugs
-
-## [1.0.0-tomo+5.2] 
-
-* Update: fix some bugs
-
-## [1.0.0-tomo+5.1] 
+## [1.0.0-tomo+5.2.2]
 
 * Update: fix some bugs
 

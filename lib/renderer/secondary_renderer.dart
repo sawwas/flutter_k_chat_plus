@@ -56,8 +56,8 @@ class SecondaryRenderer extends BaseChartRenderer<MACDEntity> {
         drawLine(lastPoint.cci, curPoint.cci, canvas, lastX, curX,
             chartColors.rsiColor);
         break;
-      default:
-        break;
+      // default:
+      //   break;
     }
   }
 
@@ -147,11 +147,11 @@ class SecondaryRenderer extends BaseChartRenderer<MACDEntity> {
               style: getTextStyle(chartColors.rsiColor)),
         ];
         break;
-      default:
-        break;
+      // default:
+      //   break;
     }
     TextPainter tp = TextPainter(
-        text: TextSpan(children: children ?? []),
+        text: TextSpan(children: children),
         textDirection: TextDirection.ltr);
     tp.layout();
     tp.paint(canvas, Offset(x, chartRect.top - topPadding));

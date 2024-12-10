@@ -333,10 +333,10 @@ abstract class BaseChartPainter extends CustomPainter {
               min(mSecondaryRectList[index].mMinValue, item.cci!);
         }
         break;
-      default:
-        mSecondaryRectList[index].mMaxValue = 0;
-        mSecondaryRectList[index].mMinValue = 0;
-        break;
+      // default:
+      //   mSecondaryRectList[index].mMaxValue = 0;
+      //   mSecondaryRectList[index].mMinValue = 0;
+      //   break;
     }
   }
 
