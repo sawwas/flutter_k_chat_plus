@@ -1,10 +1,15 @@
 import '../entity/k_entity.dart';
 
 class KLineEntity extends KEntity {
+  @override
   late double open;
+  @override
   late double high;
+  @override
   late double low;
+  @override
   late double close;
+  @override
   late double vol;
   late double? amount;
   double? change;

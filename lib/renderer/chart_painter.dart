@@ -45,10 +45,12 @@ class ChartPainter extends BaseChartPainter {
   List<int> maDayList;
   final ChartColors chartColors;
   late Paint selectPointPaint, selectorBorderPaint, nowPricePaint;
+  @override
   final ChartStyle chartStyle;
   final bool hideGrid;
   final bool showNowPrice;
   final VerticalTextAlignment verticalTextAlignment;
+  @override
   final BaseDimension baseDimension;
 
   ChartPainter(
