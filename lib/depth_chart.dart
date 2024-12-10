@@ -156,7 +156,9 @@ class DepthChartPainter extends CustomPainter {
     if (mBuyData == null ||
         mSellData == null ||
         mBuyData!.isEmpty ||
-        mSellData!.isEmpty) return;
+        mSellData!.isEmpty) {
+      return;
+    }
     mWidth = size.width;
     mDrawWidth = mWidth / 2;
     mDrawHeight = size.height - mPaddingBottom;

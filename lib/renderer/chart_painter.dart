@@ -231,7 +231,9 @@ class ChartPainter extends BaseChartPainter {
 
   @override
   void drawDate(Canvas canvas, Size size) {
-    if (datas == null) return;
+    if (datas == null) {
+      return;
+    }
 
     double columnSpace = size.width / mGridColumns;
     double startX = getX(mStartIndex) - mPointWidth / 2;
@@ -364,8 +366,12 @@ class ChartPainter extends BaseChartPainter {
 
   @override
   void drawMaxAndMin(Canvas canvas) {
-    if (isLine == true) return;
-    if (!chartStyle.isShowHighOrLowPoint) return;
+    if (isLine == true) {
+      return;
+    }
+    if (!chartStyle.isShowHighOrLowPoint) {
+      return;
+    }
     //plot maxima and minima
     double x = translateXtoX(getX(mMainMinIndex));
     double y = getMainY(mMainLowMinValue);

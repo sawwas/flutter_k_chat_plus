@@ -246,8 +246,12 @@ abstract class BaseChartPainter extends CustomPainter {
   /// calculate values
   /// Calculates maximum and minimum values, indices, and other data needed for drawing.
   calculateValue() {
-    if (datas == null) return;
-    if (datas!.isEmpty) return;
+    if (datas == null) {
+      return;
+    }
+    if (datas!.isEmpty) {
+      return;
+    }
     maxScrollX = getMinTranslateX().abs();
     setTranslateXFromScrollX(scrollX);
     mStartIndex = indexOfTranslateX(xToTranslateX(0));

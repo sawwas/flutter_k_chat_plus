@@ -35,7 +35,7 @@ class KChartWidget extends StatefulWidget {
   // final Function()? onSecondaryTap;
   final bool isLine;
   final bool
-  isTapShowInfoDialog; //Whether to enable click to display detailed data
+      isTapShowInfoDialog; //Whether to enable click to display detailed data
   final bool hideGrid;
   final bool showNowPrice;
   final bool showInfoDialog;
@@ -64,30 +64,30 @@ class KChartWidget extends StatefulWidget {
 
   KChartWidget(this.datas, this.chartStyle, this.chartColors,
       {required this.isTrendLine,
-        this.xFrontPadding = 100,
-        this.mainState = MainState.mA,
-        this.secondaryStateLi = const <SecondaryState>{},
-        // this.onSecondaryTap,
-        this.volHidden = false,
-        this.isLine = false,
-        this.isTapShowInfoDialog = false,
-        this.hideGrid = false,
-        this.showNowPrice = true,
-        this.showInfoDialog = true,
-        this.materialInfoDialog = true,
-        this.chartTranslations = const ChartTranslations(),
-        this.timeFormat = TimeFormat.yearMONTHDAY,
-        this.onLoadMore,
-        this.fixedLength = 2,
-        this.maDayList = const [5, 10, 20],
-        this.flingTime = 600,
-        this.flingRatio = 0.5,
-        this.flingCurve = Curves.decelerate,
-        this.isOnDrag,
-        this.verticalTextAlignment = VerticalTextAlignment.left,
-        this.mBaseHeight = 360,
-        //# 十字光标长按 / 短按切换 0.5秒后才触发
-        this.isLongFocusDurationTime = 500});
+      this.xFrontPadding = 100,
+      this.mainState = MainState.mA,
+      this.secondaryStateLi = const <SecondaryState>{},
+      // this.onSecondaryTap,
+      this.volHidden = false,
+      this.isLine = false,
+      this.isTapShowInfoDialog = false,
+      this.hideGrid = false,
+      this.showNowPrice = true,
+      this.showInfoDialog = true,
+      this.materialInfoDialog = true,
+      this.chartTranslations = const ChartTranslations(),
+      this.timeFormat = TimeFormat.yearMONTHDAY,
+      this.onLoadMore,
+      this.fixedLength = 2,
+      this.maDayList = const [5, 10, 20],
+      this.flingTime = 600,
+      this.flingRatio = 0.5,
+      this.flingCurve = Curves.decelerate,
+      this.isOnDrag,
+      this.verticalTextAlignment = VerticalTextAlignment.left,
+      this.mBaseHeight = 360,
+      //# 十字光标长按 / 短按切换 0.5秒后才触发
+      this.isLongFocusDurationTime = 500});
 
   @override
   State<StatefulWidget> createState() => KChartWidgetState();
@@ -98,12 +98,9 @@ bool longPressTriggered = false;
 class KChartWidgetState extends State<KChartWidget>
     with TickerProviderStateMixin {
   final StreamController<InfoWindowEntity?> mInfoWindowStream =
-  StreamController<InfoWindowEntity?>.broadcast();
-  double mScaleX = 1.0,
-      mScrollX = 0.0,
-      mSelectX = 0.0;
-  double mHeight = 0,
-      mWidth = 0;
+      StreamController<InfoWindowEntity?>.broadcast();
+  double mScaleX = 1.0, mScrollX = 0.0, mSelectX = 0.0;
+  double mHeight = 0, mWidth = 0;
   AnimationController? _controller;
   Animation<double>? aniX;
 
@@ -120,10 +117,7 @@ class KChartWidgetState extends State<KChartWidget>
   }
 
   double _lastScale = 1.0;
-  bool isScale = false,
-      isDrag = false,
-      isLongPress = false,
-      isOnTap = false;
+  bool isScale = false, isDrag = false, isLongPress = false, isOnTap = false;
 
   int pointerCount = 0;
 
@@ -197,10 +191,10 @@ class KChartWidgetState extends State<KChartWidget>
         return RawGestureDetector(
           gestures: {
             // Registering a ScaleGestureRecognizer to handle scale gestures
-            ScaleGestureRecognizer: GestureRecognizerFactoryWithHandlers<
-                ScaleGestureRecognizer>(
-                  () => ScaleGestureRecognizer(),
-                  (ScaleGestureRecognizer instance) {
+            ScaleGestureRecognizer:
+                GestureRecognizerFactoryWithHandlers<ScaleGestureRecognizer>(
+              () => ScaleGestureRecognizer(),
+              (ScaleGestureRecognizer instance) {
                 instance
                   ..onStart = (details) {
                     pointerCount = details.pointerCount;
@@ -221,10 +215,11 @@ class KChartWidgetState extends State<KChartWidget>
               },
             ),
             // Registering a HorizontalDragGestureRecognizer to handle horizontal drag gestures
-            HorizontalDragGestureRecognizer: GestureRecognizerFactoryWithHandlers<
-                HorizontalDragGestureRecognizer>(
-                  () => HorizontalDragGestureRecognizer(),
-                  (HorizontalDragGestureRecognizer instance) {
+            HorizontalDragGestureRecognizer:
+                GestureRecognizerFactoryWithHandlers<
+                    HorizontalDragGestureRecognizer>(
+              () => HorizontalDragGestureRecognizer(),
+              (HorizontalDragGestureRecognizer instance) {
                 instance
                   ..onDown = (details) {
                     if (pointerCount > 1) {
@@ -238,7 +233,9 @@ class KChartWidgetState extends State<KChartWidget>
                     if (pointerCount > 1) {
                       return;
                     }
-                    if (isScale || isLongPress) return;
+                    if (isScale || isLongPress) {
+                      return;
+                    }
                     mScrollX =
                         ((details.primaryDelta ?? 0) / mScaleX + mScrollX)
                             .clamp(0.0, ChartPainter.maxScrollX)
@@ -273,7 +270,7 @@ class KChartWidgetState extends State<KChartWidget>
                   longPressTriggered = false;
                   _timer?.cancel();
 
-                  Future.delayed(Duration(milliseconds: 12500),(){
+                  Future.delayed(Duration(milliseconds: 12500), () {
                     notifyChanged();
                   });
                 }
@@ -289,8 +286,8 @@ class KChartWidgetState extends State<KChartWidget>
                 if (waitingForOtherPairofCords) {
                   var a = lines.last;
                   lines.removeLast();
-                  lines.add(
-                      TrendLine(a.p1, p1, trendLineMax!, trendLineScale!));
+                  lines
+                      .add(TrendLine(a.p1, p1, trendLineMax!, trendLineScale!));
                   waitingForOtherPairofCords = false;
                 } else {
                   waitingForOtherPairofCords = true;
@@ -356,7 +353,7 @@ class KChartWidgetState extends State<KChartWidget>
               isOnTap = false;
               isLongPress = true;
               if ((mSelectX != details.localPosition.dx ||
-                  mSelectY != details.globalPosition.dy) &&
+                      mSelectY != details.globalPosition.dy) &&
                   !widget.isTrendLine) {
                 mSelectX = details.localPosition.dx;
                 notifyChanged();
@@ -376,10 +373,8 @@ class KChartWidgetState extends State<KChartWidget>
             },
             onLongPressMoveUpdate: (details) {
               var longPressTemp =
-              (_longPressStartTime?.millisecondsSinceEpoch ?? 0);
-              if (DateTime
-                  .now()
-                  .millisecondsSinceEpoch - longPressTemp >=
+                  (_longPressStartTime?.millisecondsSinceEpoch ?? 0);
+              if (DateTime.now().millisecondsSinceEpoch - longPressTemp >=
                   500) {
                 longPressTriggered = true;
                 notifyChanged();
@@ -389,7 +384,7 @@ class KChartWidgetState extends State<KChartWidget>
               }
 
               if ((mSelectX != details.localPosition.dx ||
-                  mSelectY != details.globalPosition.dy) &&
+                      mSelectY != details.globalPosition.dy) &&
                   !widget.isTrendLine) {
                 mSelectX = details.localPosition.dx;
                 mSelectY = details.localPosition.dy;
@@ -430,7 +425,9 @@ class KChartWidgetState extends State<KChartWidget>
                   painter: painter,
                 ),
                 //#十字光标长按0.5秒后才触发 -----------------------------------------------》》》》》 !! 关键 ！！ （isLongFocusDurationTime: 500/0 和 isLongFocus：true/false 切换）
-                if (widget.showInfoDialog && (widget.isLongFocusDurationTime == 0 || longPressTriggered)) _buildInfoDialog()
+                if (widget.showInfoDialog &&
+                    (widget.isLongFocusDurationTime == 0 || longPressTriggered))
+                  _buildInfoDialog()
               ],
             ),
           ),
@@ -462,7 +459,7 @@ class KChartWidgetState extends State<KChartWidget>
     aniX = null;
     aniX = Tween<double>(begin: mScrollX, end: x * widget.flingRatio + mScrollX)
         .animate(CurvedAnimation(
-        parent: _controller!.view, curve: widget.flingCurve));
+            parent: _controller!.view, curve: widget.flingCurve));
     aniX!.addListener(() {
       mScrollX = aniX!.value;
       if (mScrollX <= 0) {
@@ -507,15 +504,20 @@ class KChartWidgetState extends State<KChartWidget>
         }
         if (widget.isLongFocusDurationTime != 0 &&
             (!longPressTriggered || widget.isLine == true
-                // ||
-                // !snapshot.hasData ||
-                // snapshot.data?.kLineEntity == null
-            )) return SizedBox();
-        if (widget.isLongFocusDurationTime != 0 && !longPressTriggered &&
+            // ||
+            // !snapshot.hasData ||
+            // snapshot.data?.kLineEntity == null
+            )) {
+          return SizedBox();
+        }
+        if (widget.isLongFocusDurationTime != 0 &&
+            !longPressTriggered &&
             snapshot.data == null) {
           return SizedBox.shrink();
         }
-        if (snapshot.data == null) return SizedBox.shrink();
+        if (snapshot.data == null) {
+          return SizedBox.shrink();
+        }
 
         KLineEntity entity = snapshot.data!.kLineEntity;
         final dialogWidth = mWidth / 3;

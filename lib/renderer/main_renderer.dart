@@ -115,7 +115,9 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
         ],
       );
     }
-    if (span == null) return;
+    if (span == null) {
+      return;
+    }
     TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
     tp.layout();
     if (chartStyle.isShowStrategyTypeTop) {
@@ -274,10 +276,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       tileMode: TileMode.clamp,
-      colors: [
-        chartColors.lineFillColor,
-        chartColors.lineFillInsideColor
-      ],
+      colors: [chartColors.lineFillColor, chartColors.lineFillInsideColor],
     ).createShader(Rect.fromLTRB(
         chartRect.left, chartRect.top, chartRect.right, chartRect.bottom));
     mLineFillPaint.shader = mLineFillShader;
@@ -319,8 +318,8 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
           chartColors.ma10Color);
     }
     if (lastPoint.mb != 0) {
-      drawLine(lastPoint.mb, curPoint.mb, canvas, lastX, curX,
-          chartColors.ma5Color);
+      drawLine(
+          lastPoint.mb, curPoint.mb, canvas, lastX, curX, chartColors.ma5Color);
     }
     if (lastPoint.dn != 0) {
       drawLine(lastPoint.dn, curPoint.dn, canvas, lastX, curX,
