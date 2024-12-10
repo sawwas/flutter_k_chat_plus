@@ -16,14 +16,14 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
           fixedLength: fixedLength,
           gridColor: chartColors.gridColor,
         ) {
-    mVolWidth = this.chartStyle.volWidth;
+    mVolWidth = chartStyle.volWidth;
   }
 
   @override
   void drawChart(VolumeEntity lastPoint, VolumeEntity curPoint, double lastX,
       double curX, Size size, Canvas canvas) {
 
-    if(this.chartStyle.volisDouble){
+    if(chartStyle.volisDouble){
       /// 双成交量
       double left = curPoint.vol * curPoint.open * 1.2 / (curPoint.close + curPoint.open);
       double right = curPoint.vol * (curPoint.close + curPoint.open - curPoint.open * 1.2) / (curPoint.close + curPoint.open);
@@ -37,8 +37,8 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
             Rect.fromLTRB(curX - mVolWidth, topLeft, curX - 1, bottom),
             chartPaint
               ..color = curPoint.close > curPoint.open || curPoint.open < curPoint.vol
-                  ? this.chartColors.dnColor
-                  : this.chartColors.upColor);
+                  ? chartColors.dnColor
+                  : chartColors.upColor);
 
         canvas.drawRect(
             Rect.fromLTRB(curX - 1 , topLeft, curX + 1, bottom),
@@ -49,8 +49,8 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
             Rect.fromLTRB(curX + 1 , topRight, curX + mVolWidth, bottom),
             chartPaint
               ..color = curPoint.close > curPoint.open || curPoint.close >= curPoint.vol
-                  ? this.chartColors.upColor
-                  : this.chartColors.dnColor);
+                  ? chartColors.upColor
+                  : chartColors.dnColor);
       }
     }else{
       /// 单成交量
@@ -62,8 +62,8 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
             Rect.fromLTRB(curX - r, top, curX + r, bottom),
             chartPaint
               ..color = curPoint.close > curPoint.open
-                  ? this.chartColors.upColor
-                  : this.chartColors.dnColor);
+                  ? chartColors.upColor
+                  : chartColors.dnColor);
       }
 
     }
@@ -71,14 +71,14 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
 
 
 
-    if (this.chartStyle.showMAVolume && lastPoint.MA5Volume != 0) {
+    if (chartStyle.showMAVolume && lastPoint.MA5Volume != 0) {
       drawLine(lastPoint.MA5Volume, curPoint.MA5Volume, canvas, lastX, curX,
-          this.chartColors.ma5Color);
+          chartColors.ma5Color);
     }
 
-    if (this.chartStyle.showMAVolume && lastPoint.MA10Volume != 0) {
+    if (chartStyle.showMAVolume && lastPoint.MA10Volume != 0) {
       drawLine(lastPoint.MA10Volume, curPoint.MA10Volume, canvas, lastX, curX,
-          this.chartColors.ma10Color);
+          chartColors.ma10Color);
     }
   }
 
@@ -87,28 +87,28 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
 
   @override
   void drawText(Canvas canvas, VolumeEntity data, double x) {
-    if (this.chartStyle.isShowStrategyTypeBottom) {
+    if (chartStyle.isShowStrategyTypeBottom) {
       TextSpan span = TextSpan(
         children: [
           /// 成交量
           TextSpan(
               text: "VOL:",
               // text: "VOL:${NumberUtil.format(data.vol)}    ",
-              // style: getTextStyle(this.chartColors.volColor)),
+              // style: getTextStyle(chartColors.volColor)),
               style: getTextStyle(
-                  this.chartColors.infoWindowTitleColor.withOpacity(0.5))),
+                  chartColors.infoWindowTitleColor.withOpacity(0.5))),
           formatValueSpan(
               (double.tryParse('${data.vol}') ?? 0.0),
               getTextStyle(
-                  this.chartColors.infoWindowTitleColor.withOpacity(0.5))),
-          if (data.MA5Volume.notNullOrZero && this.chartStyle.isShowBottomMa)
+                  chartColors.infoWindowTitleColor.withOpacity(0.5))),
+          if (data.MA5Volume.notNullOrZero && chartStyle.isShowBottomMa)
             TextSpan(
                 text: "MA5:${NumberUtil.format(data.MA5Volume!)}    ",
-                style: getTextStyle(this.chartColors.ma5Color)),
-          if (data.MA10Volume.notNullOrZero && this.chartStyle.isShowBottomMa)
+                style: getTextStyle(chartColors.ma5Color)),
+          if (data.MA10Volume.notNullOrZero && chartStyle.isShowBottomMa)
             TextSpan(
                 text: "MA10:${NumberUtil.format(data.MA10Volume!)}    ",
-                style: getTextStyle(this.chartColors.ma10Color)),
+                style: getTextStyle(chartColors.ma10Color)),
         ],
       );
       TextPainter tp =
@@ -120,7 +120,7 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
 
   @override
   void drawVerticalText(canvas, textStyle, int gridRows) {
-    if (this.chartStyle.isShowStrategyTypeBottomForMaxVol) {
+    if (chartStyle.isShowStrategyTypeBottomForMaxVol) {
       TextSpan span =
           TextSpan(text: "\n\n\n${NumberUtil.format(maxValue)}", style: textStyle);
       TextPainter tp =

@@ -1,4 +1,4 @@
-library k_chart_plus_deeping;
+library;
 
 export 'k_chart_widget.dart'; //布局
 export 'chart_style.dart';

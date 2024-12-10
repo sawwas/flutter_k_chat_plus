@@ -6,21 +6,21 @@ import 'package:k_chart_plus_deeping/components/popup_info_view.dart';
 import 'package:k_chart_plus_deeping/k_chart_plus.dart';
 import 'renderer/base_dimension.dart';
 
-enum MainState { MA, BOLL, NONE }
+enum MainState { mA, bOLL, nONE }
 
 // enum SecondaryState { MACD, KDJ, RSI, WR, CCI, NONE }
-enum SecondaryState { MACD, KDJ, RSI, WR, CCI } //no support NONE
+enum SecondaryState { mACD, kDJ, rSI, wR, cCI } //no support NONE
 
 class TimeFormat {
-  static const List<String> YEAR_MONTH_DAY = [yyyy, '-', mm, '-', dd];
-  static const List<String> YEAR_MONTH_DAY_WITH_HOUR = [
+  static const List<String> yearMONTHDAY = [yyyy, '-', mm, '-', dd];
+  static const List<String> yearMONTHDAYWITHHOUR = [
     yyyy,
     '-',
     mm,
     '-',
     dd,
     ' ',
-    HH,
+    hH,
     ':',
     nn
   ];
@@ -65,7 +65,7 @@ class KChartWidget extends StatefulWidget {
   KChartWidget(this.datas, this.chartStyle, this.chartColors,
       {required this.isTrendLine,
         this.xFrontPadding = 100,
-        this.mainState = MainState.MA,
+        this.mainState = MainState.mA,
         this.secondaryStateLi = const <SecondaryState>{},
         // this.onSecondaryTap,
         this.volHidden = false,
@@ -76,7 +76,7 @@ class KChartWidget extends StatefulWidget {
         this.showInfoDialog = true,
         this.materialInfoDialog = true,
         this.chartTranslations = const ChartTranslations(),
-        this.timeFormat = TimeFormat.YEAR_MONTH_DAY,
+        this.timeFormat = TimeFormat.yearMONTHDAY,
         this.onLoadMore,
         this.fixedLength = 2,
         this.maDayList = const [5, 10, 20],
@@ -90,12 +90,12 @@ class KChartWidget extends StatefulWidget {
         this.isLongFocusDurationTime = 500});
 
   @override
-  _KChartWidgetState createState() => _KChartWidgetState();
+  State<StatefulWidget> createState() => KChartWidgetState();
 }
 
 bool longPressTriggered = false;
 
-class _KChartWidgetState extends State<KChartWidget>
+class KChartWidgetState extends State<KChartWidget>
     with TickerProviderStateMixin {
   final StreamController<InfoWindowEntity?> mInfoWindowStream =
   StreamController<InfoWindowEntity?>.broadcast();
@@ -160,7 +160,7 @@ class _KChartWidgetState extends State<KChartWidget>
       volHidden: widget.volHidden,
       secondaryStateLi: widget.secondaryStateLi,
     );
-    final _painter = ChartPainter(
+    final painter = ChartPainter(
       widget.chartStyle,
       widget.chartColors,
       baseDimension: baseDimension,
@@ -202,8 +202,8 @@ class _KChartWidgetState extends State<KChartWidget>
                   () => ScaleGestureRecognizer(),
                   (ScaleGestureRecognizer instance) {
                 instance
-                  ..onStart = (_) {
-                    pointerCount = _.pointerCount;
+                  ..onStart = (details) {
+                    pointerCount = details.pointerCount;
                     isScale = true;
                   }
                   ..onUpdate = (details) {
@@ -263,7 +263,7 @@ class _KChartWidgetState extends State<KChartWidget>
               // }
 
               if (!widget.isTrendLine &&
-                  _painter.isInMainRect(details.localPosition)) {
+                  painter.isInMainRect(details.localPosition)) {
                 isOnTap = true;
 
                 if (mSelectX != details.localPosition.dx &&
@@ -427,7 +427,7 @@ class _KChartWidgetState extends State<KChartWidget>
               children: <Widget>[
                 CustomPaint(
                   size: Size(double.infinity, baseDimension.mDisplayHeight),
-                  painter: _painter,
+                  painter: painter,
                 ),
                 //#十字光标长按0.5秒后才触发 -----------------------------------------------》》》》》 !! 关键 ！！ （isLongFocusDurationTime: 500/0 和 isLongFocus：true/false 切换）
                 if (widget.showInfoDialog && (widget.isLongFocusDurationTime == 0 || longPressTriggered)) _buildInfoDialog()

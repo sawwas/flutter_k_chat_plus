@@ -42,16 +42,16 @@ class KLineEntity extends KEntity {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['time'] = this.time;
-    data['open'] = this.open;
-    data['close'] = this.close;
-    data['high'] = this.high;
-    data['low'] = this.low;
-    data['vol'] = this.vol;
-    data['amount'] = this.amount;
-    data['ratio'] = this.ratio;
-    data['change'] = this.change;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['time'] = time;
+    data['open'] = open;
+    data['close'] = close;
+    data['high'] = high;
+    data['low'] = low;
+    data['vol'] = vol;
+    data['amount'] = amount;
+    data['ratio'] = ratio;
+    data['change'] = change;
     return data;
   }
 

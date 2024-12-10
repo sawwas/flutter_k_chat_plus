@@ -20,7 +20,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
 
   //绘制的内容区域
   late Rect _contentRect;
-  double _contentPadding = 5.0;
+  final double _contentPadding = 5.0;
   List<int> maDayList;
 
   //EMA
@@ -55,13 +55,13 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
             topPadding: topPadding,
             fixedLength: fixedLength,
             gridColor: chartColors.gridColor) {
-    mCandleWidth = this.chartStyle.candleWidth;
-    mCandleLineWidth = this.chartStyle.candleLineWidth;
+    mCandleWidth = chartStyle.candleWidth;
+    mCandleLineWidth = chartStyle.candleLineWidth;
     mLinePaint = Paint()
       ..isAntiAlias = true
       ..style = PaintingStyle.stroke
       ..strokeWidth = mLineStrokeWidth
-      ..color = this.chartColors.kLineColor;
+      ..color = chartColors.kLineColor;
     _contentRect = Rect.fromLTRB(
         chartRect.left,
         chartRect.top + _contentPadding,
@@ -78,47 +78,47 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
   void drawText(Canvas canvas, CandleEntity data, double x) {
     if (isLine == true) return;
     TextSpan? span;
-    if (state == MainState.MA) {
+    if (state == MainState.mA) {
       // span = TextSpan(
       //   children: _createMATextSpan(data),
       // );
-      String value = '${format((data.maValueList ?? [0])[0])}';
+      String value = format((data.maValueList ?? [0])[0]);
       span = TextSpan(
         children: [
           TextSpan(
             children: _createMATextSpan(data),
           ),
-          if (this.chartStyle.isShowEma && value.length <= 13)
+          if (chartStyle.isShowEma && value.length <= 13)
             //EMA
             TextSpan(text: '\n'),
-          if (this.chartStyle.isShowEma)
+          if (chartStyle.isShowEma)
             TextSpan(
               children: _createEMATextSpan(data),
             ),
         ],
       );
-    } else if (state == MainState.BOLL) {
+    } else if (state == MainState.bOLL) {
       span = TextSpan(
         children: [
           if (data.up != 0)
             TextSpan(
                 text: "BOLL:${format(data.mb)}    ",
-                style: getTextStyle(this.chartColors.ma5Color)),
+                style: getTextStyle(chartColors.ma5Color)),
           if (data.mb != 0)
             TextSpan(
                 text: "UB:${format(data.up)}    ",
-                style: getTextStyle(this.chartColors.ma10Color)),
+                style: getTextStyle(chartColors.ma10Color)),
           if (data.dn != 0)
             TextSpan(
                 text: "LB:${format(data.dn)}    ",
-                style: getTextStyle(this.chartColors.ma30Color)),
+                style: getTextStyle(chartColors.ma30Color)),
         ],
       );
     }
     if (span == null) return;
     TextPainter tp = TextPainter(text: span, textDirection: TextDirection.ltr);
     tp.layout();
-    if (this.chartStyle.isShowStrategyTypeTop) {
+    if (chartStyle.isShowStrategyTypeTop) {
       tp.paint(canvas, Offset(x, chartRect.top - topPadding));
     }
   }
@@ -127,28 +127,29 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     List<InlineSpan> result = [];
     for (int i = 0; i < (data.maValueList?.length ?? 0); i++) {
       if (data.maValueList?[i] != 0) {
-        String value = '${format(data.maValueList![i])}';
+        String value = format(data.maValueList![i]);
         //
         // var item = TextSpan(
         //     text: "MA${maDayList[i]}:$value    ",
-        //     style: getTextStyle(this.chartColors.getMAColor(i)));
+        //     style: getTextStyle(chartColors.getMAColor(i)));
 
         //科学计算 下标
         List<InlineSpan> children = [];
 
         TextSpan span = TextSpan(
             text: "MA${maDayList[i]}:",
-            style: getTextStyle(this.chartColors.getMAColor(i)));
+            style: getTextStyle(chartColors.getMAColor(i)));
         final spanS = formatValueSpan(
             (double.tryParse('${data.maValueList![i]}') ?? 0.0),
-            getTextStyle(this.chartColors.getMAColor(i)));
+            getTextStyle(chartColors.getMAColor(i)));
         children.add(span);
         children.add(spanS);
         TextSpan? item = TextSpan(children: children);
 
         result.add(item);
-        if (value.length > 13 && i > 0 && i % 1 == 0)
+        if (value.length > 13 && i > 0 && i % 1 == 0) {
           result.add(TextSpan(text: '\n'));
+        }
       }
     }
     return result;
@@ -160,20 +161,20 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
     for (int i = 0; i < (data.emaValueList?.length ?? 0); i++) {
       if (data.emaValueList?[i] != 0) {
         // String value = '${format(data.emaValueList![i])}';
-        String value = '${format(data.emaValueList![i])}';
+        String value = format(data.emaValueList![i]);
         // var item = TextSpan(
         //     text: "EMA${emaValueList[i]}:$value    ",
-        //     style: getTextStyle(this.chartColors.getEMAColor(i)));
+        //     style: getTextStyle(chartColors.getEMAColor(i)));
 
         //科学计算 下标
         List<InlineSpan> children = [];
 
         TextSpan span = TextSpan(
             text: "EMA${emaValueList[i]}:",
-            style: getTextStyle(this.chartColors.getEMAColor(i)));
+            style: getTextStyle(chartColors.getEMAColor(i)));
         final spanS = formatValueSpan(
             (double.tryParse('${data.emaValueList![i]}') ?? 0.0),
-            getTextStyle(this.chartColors.getEMAColor(i)));
+            getTextStyle(chartColors.getEMAColor(i)));
         children.add(span);
         children.add(spanS);
         TextSpan? item = TextSpan(children: children);
@@ -216,14 +217,14 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       drawPolyline(lastPoint.close, curPoint.close, canvas, lastX, curX);
     } else {
       drawCandle(curPoint, canvas, curX);
-      if (state == MainState.MA) {
+      if (state == MainState.mA) {
         drawMaLine(lastPoint, curPoint, canvas, lastX, curX);
         //// 新增EMA绘制逻辑
         //EMA
-        if (this.chartStyle.isShowEma) {
+        if (chartStyle.isShowEma) {
           drawEmaLine(lastPoint, curPoint, canvas, lastX, curX);
         }
-      } else if (state == MainState.BOLL) {
+      } else if (state == MainState.bOLL) {
         drawBollLine(lastPoint, curPoint, canvas, lastX, curX);
       }
     }
@@ -239,7 +240,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       }
       if (lastPoint.emaValueList?[i] != 0) {
         drawLine(lastPoint.emaValueList?[i], curPoint.emaValueList?[i], canvas,
-            lastX, curX, this.chartColors.getEMAColor(i));
+            lastX, curX, chartColors.getEMAColor(i));
       }
     }
   }
@@ -274,12 +275,12 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       end: Alignment.bottomCenter,
       tileMode: TileMode.clamp,
       colors: [
-        this.chartColors.lineFillColor,
-        this.chartColors.lineFillInsideColor
+        chartColors.lineFillColor,
+        chartColors.lineFillInsideColor
       ],
     ).createShader(Rect.fromLTRB(
         chartRect.left, chartRect.top, chartRect.right, chartRect.bottom));
-    mLineFillPaint..shader = mLineFillShader;
+    mLineFillPaint.shader = mLineFillShader;
 
     mLineFillPath ??= Path();
 
@@ -306,7 +307,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       }
       if (lastPoint.maValueList?[i] != 0) {
         drawLine(lastPoint.maValueList?[i], curPoint.maValueList?[i], canvas,
-            lastX, curX, this.chartColors.getMAColor(i));
+            lastX, curX, chartColors.getMAColor(i));
       }
     }
   }
@@ -315,15 +316,15 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       Canvas canvas, double lastX, double curX) {
     if (lastPoint.up != 0) {
       drawLine(lastPoint.up, curPoint.up, canvas, lastX, curX,
-          this.chartColors.ma10Color);
+          chartColors.ma10Color);
     }
     if (lastPoint.mb != 0) {
       drawLine(lastPoint.mb, curPoint.mb, canvas, lastX, curX,
-          this.chartColors.ma5Color);
+          chartColors.ma5Color);
     }
     if (lastPoint.dn != 0) {
       drawLine(lastPoint.dn, curPoint.dn, canvas, lastX, curX,
-          this.chartColors.ma30Color);
+          chartColors.ma30Color);
     }
   }
 
@@ -339,7 +340,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       if (open - close < mCandleLineWidth) {
         open = close + mCandleLineWidth;
       }
-      chartPaint.color = this.chartColors.upColor;
+      chartPaint.color = chartColors.upColor;
       canvas.drawRect(
           Rect.fromLTRB(curX - r, close, curX + r, open), chartPaint);
       canvas.drawRect(
@@ -349,7 +350,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       if (close - open < mCandleLineWidth) {
         open = close - mCandleLineWidth;
       }
-      chartPaint.color = this.chartColors.dnColor;
+      chartPaint.color = chartColors.dnColor;
       canvas.drawRect(
           Rect.fromLTRB(curX - r, open, curX + r, close), chartPaint);
       canvas.drawRect(
@@ -364,7 +365,7 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
       double value = (gridRows - i) * rowSpace / scaleY + minValue;
 
       // TextSpan span = TextSpan(
-      //     text: "${format(value, isNotPoint: this.chartStyle.isNotPoint)}",
+      //     text: "${format(value, isNotPoint: chartStyle.isNotPoint)}",
       //     style: textStyle);
 
       //右侧文字科学计数
@@ -381,16 +382,17 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
           offsetX = 0;
           break;
         case VerticalTextAlignment.right:
-          offsetX = chartRect.width - tp.width - this.chartStyle.rightPadding;
+          offsetX = chartRect.width - tp.width - chartStyle.rightPadding;
           break;
       }
 
-      if (i == 0 && this.chartStyle.isShowLeftTopicPoint) {
+      if (i == 0 && chartStyle.isShowLeftTopicPoint) {
         tp.paint(canvas, Offset(offsetX, topPadding));
       } else {
-        if (this.chartStyle.isShowLeftTopicPoint || i > 0)
+        if (chartStyle.isShowLeftTopicPoint || i > 0) {
           tp.paint(
               canvas, Offset(offsetX, rowSpace * i - tp.height + topPadding));
+        }
       }
     }
   }

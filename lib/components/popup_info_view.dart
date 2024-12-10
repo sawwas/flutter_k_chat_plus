@@ -16,7 +16,7 @@ class PopupInfoView extends StatelessWidget {
   final int fixedLength;
 
   const PopupInfoView({
-    Key? key,
+    super.key,
     required this.entity,
     required this.width,
     required this.chartColors,
@@ -24,7 +24,7 @@ class PopupInfoView extends StatelessWidget {
     required this.materialInfoDialog,
     required this.timeFormat,
     required this.fixedLength,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +46,8 @@ class PopupInfoView extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    double upDown = entity.change ?? entity.close - entity.open;
-    double upDownPercent = entity.ratio ?? (upDown / entity.open) * 100;
+    double upDown = entity.change ?? (entity.close ?? 0) - (entity.open ?? 0);
+    double upDownPercent = entity.ratio ?? (upDown / (entity.open ?? 0)) * 100;
     final double? entityAmount = entity.amount;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,7 +114,7 @@ class PopupInfoView extends StatelessWidget {
             ),
           Expanded(
               //科学计算 下标
-              child: (double.tryParse('${info}') ?? -987654321) == -987654321
+              child: (double.tryParse(info) ?? -987654321) == -987654321
                   ? Text(
                       info,
                       style: TextStyle(
@@ -127,7 +127,7 @@ class PopupInfoView extends StatelessWidget {
                   : RichText(
                       textAlign: TextAlign.right,
                       text: formatValueSpan(
-                          (double.tryParse('${info}') ?? 0.0),
+                          (double.tryParse(info) ?? 0.0),
                           TextStyle(
                               color: textColor ??
                                   chartColors.infoWindowNormalColor,
@@ -207,6 +207,6 @@ String formatDecimal(double num) {
     base = base.replaceFirst(RegExp(r'\.0*$'), '');
     return '$base${leadingZeros.length}';
   } else {
-    return '$base' + 'e$exponent';
+    return '${base}e$exponent';
   }
 }

@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<KLineEntity>? datas;
   bool showLoading = true;
   bool _volHidden = false;
-  MainState _mainState = MainState.MA;
+  MainState _mainState = MainState.mA;
   // final Set<SecondaryState> _secondaryStateLi = <SecondaryState>{};
   final List<SecondaryState> _secondaryStateLi = [];
   List<DepthEntity>? _bids, _asks;
@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
               volHidden: _volHidden,
               secondaryStateLi: _secondaryStateLi.toSet(),
               fixedLength: 2,
-              timeFormat: TimeFormat.YEAR_MONTH_DAY,
+              timeFormat: TimeFormat.yearMONTHDAY,
             ),
             if (showLoading)
               Container(

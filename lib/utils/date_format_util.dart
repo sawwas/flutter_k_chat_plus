@@ -33,9 +33,9 @@ const String m = 'm';
 /// Outputs month as long name
 ///
 /// Example:
-///     formatDate(DateTime(1989, 2), [MM]);
+///     formatDate(DateTime(1989, 2), [mM]);
 ///     // => february
-const String MM = 'MM';
+const String mM = 'MM';
 
 /// Outputs month as short name
 ///
@@ -76,7 +76,7 @@ const String w = 'w';
 ///     // => 53
 ///     formatDate(DateTime(1989, 2, 21), [W]);
 ///     // => 08
-const String WW = 'WW';
+const String wW = 'WW';
 
 /// Outputs week in year compactly
 ///
@@ -88,9 +88,9 @@ const String W = 'W';
 /// Outputs week day as long name
 ///
 /// Example:
-///     formatDate(DateTime(2018, 1, 14), [DD]);
+///     formatDate(DateTime(2018, 1, 14), [dD]);
 ///     // => sunday
-const String DD = 'DD';
+const String dD = 'DD';
 
 /// Outputs week day as long name
 ///
@@ -116,9 +116,9 @@ const String h = 'h';
 /// Outputs hour (0 to 23) as two digits
 ///
 /// Example:
-///     formatDate(DateTime(1989, 02, 1, 15), [HH]);
+///     formatDate(DateTime(1989, 02, 1, 15), [hH]);
 ///     // => 15
-const String HH = 'HH';
+const String hH = 'HH';
 
 /// Outputs hour (0 to 23) compactly
 ///
@@ -162,18 +162,18 @@ const String s = 's';
 /// Outputs millisecond as three digits
 ///
 /// Example:
-///     formatDate(DateTime(1989, 02, 1, 15, 40, 10, 999), [SSS]);
+///     formatDate(DateTime(1989, 02, 1, 15, 40, 10, 999), [sSS]);
 ///     // => 999
 ///     formatDate(DateTime(1989, 02, 1, 15, 40, 10, 99), [SS]);
 ///     // => 099
 ///     formatDate(DateTime(1989, 02, 1, 15, 40, 10, 0), [SS]);
 ///     // => 009
-const String SSS = 'SSS';
+const String sSS = 'SSS';
 
 /// Outputs millisecond compactly
 ///
 /// Example:
-///     formatDate(DateTime(1989, 02, 1, 15, 40, 10, 999), [SSS]);
+///     formatDate(DateTime(1989, 02, 1, 15, 40, 10, 999), [sSS]);
 ///     // => 999
 ///     formatDate(DateTime(1989, 02, 1, 15, 40, 10, 99), [SS]);
 ///     // => 99
@@ -231,7 +231,7 @@ String dateFormat(DateTime date, List<String> formats) {
       sb.write(_digits(date.month, 2));
     } else if (format == m) {
       sb.write(date.month);
-    } else if (format == MM) {
+    } else if (format == mM) {
       sb.write(monthLong[date.month - 1]);
     } else if (format == M) {
       sb.write(monthShort[date.month - 1]);
@@ -243,13 +243,13 @@ String dateFormat(DateTime date, List<String> formats) {
       sb.write((date.day + 7) ~/ 7);
     } else if (format == W) {
       sb.write((dayInYear(date) + 7) ~/ 7);
-    } else if (format == WW) {
+    } else if (format == wW) {
       sb.write(_digits((dayInYear(date) + 7) ~/ 7, 2));
-    } else if (format == DD) {
+    } else if (format == dD) {
       sb.write(dayLong[date.weekday - 1]);
     } else if (format == D) {
       sb.write(dayShort[date.weekday - 1]);
-    } else if (format == HH) {
+    } else if (format == hH) {
       sb.write(_digits(date.hour, 2));
     } else if (format == H) {
       sb.write(date.hour);
@@ -271,7 +271,7 @@ String dateFormat(DateTime date, List<String> formats) {
       sb.write(_digits(date.second, 2));
     } else if (format == s) {
       sb.write(date.second);
-    } else if (format == SSS) {
+    } else if (format == sSS) {
       sb.write(_digits(date.millisecond, 3));
     } else if (format == S) {
       sb.write(date.second);
@@ -311,7 +311,7 @@ String _digits(int value, int length) {
   return ret;
 }
 
-const List<String> monthShort = const <String>[
+const List<String> monthShort = <String>[
   'Jan',
   'Feb',
   'Mar',
@@ -326,7 +326,7 @@ const List<String> monthShort = const <String>[
   'Dec'
 ];
 
-const List<String> monthLong = const <String>[
+const List<String> monthLong = <String>[
   'January',
   'February',
   'March',
@@ -341,7 +341,7 @@ const List<String> monthLong = const <String>[
   'December'
 ];
 
-const List<String> dayShort = const [
+const List<String> dayShort = <String>[
   'Mon',
   'Tue',
   'Wed',
@@ -351,7 +351,7 @@ const List<String> dayShort = const [
   'Sun'
 ];
 
-const List<String> dayLong = const [
+const List<String> dayLong = <String>[
   'Monday',
   'Tuesday',
   'Wednesday',

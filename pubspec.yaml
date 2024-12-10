@@ -1,7 +1,7 @@
 name: k_chart_plus_deeping
 summary: A Flutter Charts depth library for drawing candlesticks, depth charts in Exchange applications.
 description: A Flutter Charts library which paint candle chart(support select multi secondary state), depth chart in Exchange Application.
-version: 1.0.0-tomo+5
+version: 1.0.0-tomo+5.1
 homepage: https://github.com/sawwas/flutter_k_chat_plus
 
 environment:
@@ -17,5 +17,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  lints: ^5.0.0
 
 flutter:

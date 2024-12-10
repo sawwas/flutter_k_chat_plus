@@ -22,10 +22,10 @@ class DepthChart extends StatefulWidget {
   });
 
   @override
-  _DepthChartState createState() => _DepthChartState();
+  State<StatefulWidget> createState() => DepthChartState();
 }
 
-class _DepthChartState extends State<DepthChart> {
+class DepthChartState extends State<DepthChart> {
   Offset? pressOffset;
   bool isLongPress = false;
 
@@ -108,21 +108,21 @@ class DepthChartPainter extends CustomPainter {
   ) {
     mBuyLinePaint ??= Paint()
       ..isAntiAlias = true
-      ..color = this.chartColors.depthBuyColor
+      ..color = chartColors.depthBuyColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
     mSellLinePaint ??= Paint()
       ..isAntiAlias = true
-      ..color = this.chartColors.depthSellColor
+      ..color = chartColors.depthSellColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
     mBuyPathPaint ??= Paint()
       ..isAntiAlias = true
-      ..color = this.chartColors.depthBuyPathColor;
+      ..color = chartColors.depthBuyPathColor;
     mSellPathPaint ??= Paint()
       ..isAntiAlias = true
-      ..color = this.chartColors.depthSellPathColor;
+      ..color = chartColors.depthSellPathColor;
     mBuyPath ??= Path();
     mSellPath ??= Path();
     init();
@@ -335,8 +335,8 @@ class DepthChartPainter extends CustomPainter {
     ///draw popup info
     ///
     _PopupPainter popupPainter = _PopupPainter(
-      chartTranslations: this.chartTranslations,
-      chartColors: this.chartColors,
+      chartTranslations: chartTranslations,
+      chartColors: chartColors,
       price: entity.price.toStringAsFixed(fixedLength!),
       amount: (entity.vol).toStringAsFixed(fixedLength!),
     );
@@ -381,7 +381,7 @@ class DepthChartPainter extends CustomPainter {
 
   getTextPainter(String text) => TextPainter(
         text: TextSpan(
-          text: "$text",
+          text: text,
           style: TextStyle(color: chartColors.defaultTextColor, fontSize: chartColors.sizeText),
         ),
         textDirection: TextDirection.ltr,
@@ -423,11 +423,11 @@ class _PopupPainter {
     required String price,
     required String amount,
   }) {
-    this.chartColors = chartColors;
-    this.pricePaint = _getTextPainter(chartTranslations.price, price);
-    this.amountPaint = _getTextPainter(chartTranslations.amount, amount);
-    this.pricePaint.layout();
-    this.amountPaint.layout();
+    chartColors = chartColors;
+    pricePaint = _getTextPainter(chartTranslations.price, price);
+    amountPaint = _getTextPainter(chartTranslations.amount, amount);
+    pricePaint.layout();
+    amountPaint.layout();
   }
 
   void paint(Canvas canvas, Offset offset) {
@@ -441,12 +441,12 @@ class _PopupPainter {
       text: TextSpan(
         text: "$label: ",
         style: TextStyle(
-            color: this.chartColors.infoWindowTitleColor, fontSize: chartColors.sizeText),
+            color: chartColors.infoWindowTitleColor, fontSize: chartColors.sizeText),
         children: [
           TextSpan(
             text: content,
             style: TextStyle(
-                color: this.chartColors.infoWindowNormalColor, fontSize: chartColors.sizeText),
+                color: chartColors.infoWindowNormalColor, fontSize: chartColors.sizeText),
           ),
         ],
       ),

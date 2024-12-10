@@ -9,8 +9,8 @@ class KChartSkeleton extends StatefulWidget {
   final double width, height;
   final bool themeColor;
 
-  const KChartSkeleton({Key? key, this.themeColor = false, this.width = double
-      .infinity, this.height = 210.0}) : super(key: key);
+  const KChartSkeleton({super.key, this.themeColor = false, this.width = double
+      .infinity, this.height = 210.0});
 
   @override
   State<StatefulWidget> createState() {

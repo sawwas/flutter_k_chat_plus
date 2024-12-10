@@ -49,7 +49,7 @@ abstract class BaseChartPainter extends CustomPainter {
   final ChartStyle chartStyle;
   late double mPointWidth;
   // format time
-  List<String> mFormats = [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn];
+  List<String> mFormats = [yyyy, '-', mm, '-', dd, ' ', hH, ':', nn];
   double xFrontPadding;
 
   /// base dimension
@@ -67,32 +67,32 @@ abstract class BaseChartPainter extends CustomPainter {
     required this.xFrontPadding,
     required this.baseDimension,
     this.isOnTap = false,
-    this.mainState = MainState.MA,
+    this.mainState = MainState.mA,
     this.volHidden = false,
     this.isTapShowInfoDialog = false,
     this.secondaryStateLi = const <SecondaryState>{},
     this.isLine = false,
   }) {
     mItemCount = datas?.length ?? 0;
-    mPointWidth = this.chartStyle.pointWidth;
-    mTopPadding = this.chartStyle.topPadding;
-    mBottomPadding = this.chartStyle.bottomPadding;
-    mChildPadding = this.chartStyle.childPadding;
-    mGridRows = this.chartStyle.gridRows;
-    mGridColumns = this.chartStyle.gridColumns;
+    mPointWidth = chartStyle.pointWidth;
+    mTopPadding = chartStyle.topPadding;
+    mBottomPadding = chartStyle.bottomPadding;
+    mChildPadding = chartStyle.childPadding;
+    mGridRows = chartStyle.gridRows;
+    mGridColumns = chartStyle.gridColumns;
     mDataLen = mItemCount * mPointWidth;
     initFormats();
   }
 
   /// init format time
   void initFormats() {
-    if (this.chartStyle.dateTimeFormat != null) {
-      mFormats = this.chartStyle.dateTimeFormat!;
+    if (chartStyle.dateTimeFormat != null) {
+      mFormats = chartStyle.dateTimeFormat!;
       return;
     }
 
     if (mItemCount < 2) {
-      mFormats = [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn];
+      mFormats = [yyyy, '-', mm, '-', dd, ' ', hH, ':', nn];
       return;
     }
 
@@ -108,7 +108,7 @@ abstract class BaseChartPainter extends CustomPainter {
       mFormats = [yy, '-', mm, '-', dd];
     } else {
       // hour line
-      mFormats = [mm, '-', dd, ' ', HH, ':', nn];
+      mFormats = [mm, '-', dd, ' ', hH, ':', nn];
     }
   }
 
@@ -135,10 +135,10 @@ abstract class BaseChartPainter extends CustomPainter {
       drawMaxAndMin(canvas);
       drawNowPrice(canvas);
 
-      if (this.chartStyle.isLongFocus && (isLongPress == true || (isTapShowInfoDialog && longPressTriggered))){
+      if (chartStyle.isLongFocus && (isLongPress == true || (isTapShowInfoDialog && longPressTriggered))){
         drawCrossLineText(canvas, size);
       }
-      else if (!this.chartStyle.isLongFocus && (isLongPress == true || (isTapShowInfoDialog && isOnTap))) {
+      else if (!chartStyle.isLongFocus && (isLongPress == true || (isTapShowInfoDialog && isOnTap))) {
         drawCrossLineText(canvas, size);
       }
     }
@@ -230,10 +230,10 @@ abstract class BaseChartPainter extends CustomPainter {
   /// compute maximum and minimum value
   void getMainMaxMinValue(KLineEntity item, int i) {
     double maxPrice, minPrice;
-    if (mainState == MainState.MA) {
+    if (mainState == MainState.mA) {
       maxPrice = max(item.high, _findMaxMA(item.maValueList ?? [0]));
       minPrice = min(item.low, _findMinMA(item.maValueList ?? [0]));
-    } else if (mainState == MainState.BOLL) {
+    } else if (mainState == MainState.bOLL) {
       maxPrice = max(item.up ?? 0, item.high);
       minPrice = min(item.dn ?? 0, item.low);
     } else {
@@ -289,7 +289,7 @@ abstract class BaseChartPainter extends CustomPainter {
     SecondaryState secondaryState = secondaryStateLi.elementAt(index);
     switch (secondaryState) {
       // MACD
-      case SecondaryState.MACD:
+      case SecondaryState.mACD:
         if (item.macd != null) {
           mSecondaryRectList[index].mMaxValue = max(
               mSecondaryRectList[index].mMaxValue,
@@ -300,7 +300,7 @@ abstract class BaseChartPainter extends CustomPainter {
         }
         break;
       // KDJ
-      case SecondaryState.KDJ:
+      case SecondaryState.kDJ:
         if (item.d != null) {
           mSecondaryRectList[index].mMaxValue = max(
               mSecondaryRectList[index].mMaxValue,
@@ -311,7 +311,7 @@ abstract class BaseChartPainter extends CustomPainter {
         }
         break;
       // RSI
-      case SecondaryState.RSI:
+      case SecondaryState.rSI:
         if (item.rsi != null) {
           mSecondaryRectList[index].mMaxValue =
               max(mSecondaryRectList[index].mMaxValue, item.rsi!);
@@ -320,12 +320,12 @@ abstract class BaseChartPainter extends CustomPainter {
         }
         break;
       // WR
-      case SecondaryState.WR:
+      case SecondaryState.wR:
         mSecondaryRectList[index].mMaxValue = 0;
         mSecondaryRectList[index].mMinValue = -100;
         break;
       // CCI
-      case SecondaryState.CCI:
+      case SecondaryState.cCI:
         if (item.cci != null) {
           mSecondaryRectList[index].mMaxValue =
               max(mSecondaryRectList[index].mMaxValue, item.cci!);
@@ -436,15 +436,15 @@ TextSpan formatValueSpan(double? value, TextStyle style) {
     // return TextSpan(text: '\$ 0.00', style: style);
   }
 
-  String _dollarValue(double value, int decimals) {
-    return '' + value.toStringAsFixed(decimals);
+  String dollarValue(double value, int decimals) {
+    return value.toStringAsFixed(decimals);
     // return '\$' + value.toStringAsFixed(decimals);
   }
 
   if (value != null && value < 0.01) {
     final temp = value.toStringAsFixed(8).split('.');
     if (temp.length != 2) {
-      return TextSpan(text: _dollarValue(value, 2), style: style);
+      return TextSpan(text: dollarValue(value, 2), style: style);
     }
     var index = 0;
     for (; index < temp[1].length; index++) {
@@ -508,13 +508,13 @@ TextSpan formatValueSpan(double? value, TextStyle style) {
   String realValueStr = '-';
   if (value != null) {
     if (value >= 1000000000) {
-      realValueStr = '${_dollarValue(value / 1000000000, 2)}B';
+      realValueStr = '${dollarValue(value / 1000000000, 2)}B';
     } else if (value >= 1000000) {
-      realValueStr = '${_dollarValue(value / 1000000, 2)}M';
+      realValueStr = '${dollarValue(value / 1000000, 2)}M';
     } else if (value >= 1000) {
-      realValueStr = '${_dollarValue(value / 1000, 2)}K';
+      realValueStr = '${dollarValue(value / 1000, 2)}K';
     } else {
-      realValueStr = _dollarValue(value, 2);
+      realValueStr = dollarValue(value, 2);
     }
   }
   return TextSpan(text: realValueStr, style: style);
