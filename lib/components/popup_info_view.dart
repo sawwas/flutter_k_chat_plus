@@ -46,8 +46,8 @@ class PopupInfoView extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    double upDown = entity.change ?? (entity.close ?? 0) - (entity.open ?? 0);
-    double upDownPercent = entity.ratio ?? (upDown / (entity.open ?? 0)) * 100;
+    double upDown = entity.change ?? (entity.close) - (entity.open);
+    double upDownPercent = entity.ratio ?? (upDown / (entity.open)) * 100;
     final double? entityAmount = entity.amount;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
