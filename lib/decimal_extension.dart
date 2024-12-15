@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 
 //科学计数 下标
 extension DecimalExtension on Decimal {
-
   bool get isNegative => compareTo(Decimal.zero) < 0;
 
   bool get isZero {
@@ -19,8 +18,10 @@ extension DecimalExtension on Decimal {
     } else {
       result = toStringAsFixedNoRound(fractionDigits);
     }
-    if(result.indexOf('.') > 0){
-      return result.replaceAll(RegExp(r'0+?$'), '').replaceAll(RegExp(r'[.]$'), '');
+    if (result.indexOf('.') > 0) {
+      return result
+          .replaceAll(RegExp(r'0+?$'), '')
+          .replaceAll(RegExp(r'[.]$'), '');
     }
     return result;
   }
@@ -59,7 +60,7 @@ extension DecimalExtension on Decimal {
     final value = floor(scale: fractionDigits);
     final intPart = value.toBigInt().abs();
     final decimalPart =
-    (Decimal.one + value.abs() - intPart.toDecimal()).shift(fractionDigits);
+        (Decimal.one + value.abs() - intPart.toDecimal()).shift(fractionDigits);
     return '${value < Decimal.zero ? '-' : ''}$intPart.${decimalPart.toString().substring(1)}';
   }
 
@@ -70,12 +71,11 @@ extension DecimalExtension on Decimal {
   //   return EtherAmount.fromBase10String(EtherUnit.wei, toString());
   // }
 
-  String dollarValue([int fixedLength=2]){
+  String dollarValue([int fixedLength = 2]) {
     return '\$${NumberFormat("#,##0.${'#' * fixedLength}").format(double.tryParse(fixed(fixedLength)))}';
   }
 
-
-  String get dollarValueParsed{
+  String get dollarValueParsed {
     if (this >= Decimal.fromInt(1000000000)) {
       return '${(this / Decimal.fromInt(1000000000)).toDecimal().dollarValue(2)}B';
     }
@@ -87,5 +87,4 @@ extension DecimalExtension on Decimal {
     }
     return dollarValue(2);
   }
-
 }

@@ -9,8 +9,11 @@ class KChartSkeleton extends StatefulWidget {
   final double width, height;
   final bool themeColor;
 
-  const KChartSkeleton({super.key, this.themeColor = false, this.width = double
-      .infinity, this.height = 210.0});
+  const KChartSkeleton(
+      {super.key,
+      this.themeColor = false,
+      this.width = double.infinity,
+      this.height = 210.0});
 
   @override
   State<StatefulWidget> createState() {
@@ -26,7 +29,7 @@ class _KChartSkeletonState extends State<KChartSkeleton> {
       child: Shimmer.fromColors(
         baseColor: Colors.grey[800]!,
         highlightColor:
-        widget.themeColor ? Color(0xFF000000) : Color(0xFFF2F2F2),
+            widget.themeColor ? Color(0xFF000000) : Color(0xFFF2F2F2),
         period: Duration(seconds: 2),
         child: Container(
           width: widget.width,

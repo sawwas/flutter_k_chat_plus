@@ -182,7 +182,9 @@ class MainRenderer extends BaseChartRenderer<CandleEntity> {
         TextSpan? item = TextSpan(children: children);
 
         if ((value.length > 13 && i > 0 && i % 2 == 0) ||
-            (value.length <= 13 && i > 2)) result.add(TextSpan(text: '\n'));
+            (value.length <= 13 && i > 2)) {
+          result.add(TextSpan(text: '\n'));
+        }
         result.add(item);
         // if (i == 2) {
         //   result.add(TextSpan(text: '\n'));

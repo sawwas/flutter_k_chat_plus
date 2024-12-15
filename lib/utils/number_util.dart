@@ -2,16 +2,20 @@ import 'dart:math';
 
 class NumberUtil {
   static String format(double n) {
-    if (n >= 1000000000) { // 10亿及以上
+    if (n >= 1000000000) {
+      // 10亿及以上
       n /= 1000000000;
       return "${n.toStringAsFixed(2)}B";
-    } else if (n >= 1000000) { // 100万至10亿
+    } else if (n >= 1000000) {
+      // 100万至10亿
       n /= 1000000;
       return "${n.toStringAsFixed(2)}M";
-    } else if (n >= 10000) { // 1万至100万
+    } else if (n >= 10000) {
+      // 1万至100万
       n /= 10000;
       return "${n.toStringAsFixed(2)}W";
-    } else if (n >= 1000) { // 1千至1万
+    } else if (n >= 1000) {
+      // 1千至1万
       n /= 1000;
       return "${n.toStringAsFixed(2)}K";
     } else {

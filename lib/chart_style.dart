@@ -210,8 +210,6 @@ class ChartStyle {
   // 是否显示策略类型底部的MA柱状图线段
   bool showMAVolume = true;
 
-
-
   double bottomPadding = 20.0;
 
   double childPadding = 12.0;

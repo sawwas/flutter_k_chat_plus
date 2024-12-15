@@ -37,20 +37,20 @@ class SecondaryRenderer extends BaseChartRenderer<MACDEntity> {
         drawMACD(curPoint, canvas, curX, lastPoint, lastX);
         break;
       case SecondaryState.kDJ:
-        drawLine(lastPoint.k, curPoint.k, canvas, lastX, curX,
-            chartColors.kColor);
-        drawLine(lastPoint.d, curPoint.d, canvas, lastX, curX,
-            chartColors.dColor);
-        drawLine(lastPoint.j, curPoint.j, canvas, lastX, curX,
-            chartColors.jColor);
+        drawLine(
+            lastPoint.k, curPoint.k, canvas, lastX, curX, chartColors.kColor);
+        drawLine(
+            lastPoint.d, curPoint.d, canvas, lastX, curX, chartColors.dColor);
+        drawLine(
+            lastPoint.j, curPoint.j, canvas, lastX, curX, chartColors.jColor);
         break;
       case SecondaryState.rSI:
         drawLine(lastPoint.rsi, curPoint.rsi, canvas, lastX, curX,
             chartColors.rsiColor);
         break;
       case SecondaryState.wR:
-        drawLine(lastPoint.r, curPoint.r, canvas, lastX, curX,
-            chartColors.rsiColor);
+        drawLine(
+            lastPoint.r, curPoint.r, canvas, lastX, curX, chartColors.rsiColor);
         break;
       case SecondaryState.cCI:
         drawLine(lastPoint.cci, curPoint.cci, canvas, lastX, curX,
@@ -151,8 +151,7 @@ class SecondaryRenderer extends BaseChartRenderer<MACDEntity> {
       //   break;
     }
     TextPainter tp = TextPainter(
-        text: TextSpan(children: children),
-        textDirection: TextDirection.ltr);
+        text: TextSpan(children: children), textDirection: TextDirection.ltr);
     tp.layout();
     tp.paint(canvas, Offset(x, chartRect.top - topPadding));
   }

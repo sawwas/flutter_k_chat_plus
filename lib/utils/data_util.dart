@@ -6,7 +6,10 @@ import '../entity/index.dart';
 class DataUtil {
   static calculate(List<KLineEntity> dataList,
       //EMA
-      [List<int> maDayList = const [5, 10, 20], int n = 20, k = 2,List<int> emaDayList = const [5, 10, 20, 60]]) {
+      [List<int> maDayList = const [5, 10, 20],
+      int n = 20,
+      k = 2,
+      List<int> emaDayList = const [5, 10, 20, 60]]) {
     calcMA(dataList, maDayList);
     // 新增EMA计算
     //EMA
@@ -43,6 +46,7 @@ class DataUtil {
       }
     }
   }
+
 //EMA
   static void calcEMA(List<KLineEntity> dataList, List<int> emaDayList) {
     if (dataList.isNotEmpty) {
@@ -60,7 +64,8 @@ class DataUtil {
           if (i == 0) {
             entity.emaValueList![emaDayList.indexOf(period)] = entity.close;
           } else {
-            double ema = (entity.close - previousEma[period]!) * multiplier + previousEma[period]!;
+            double ema = (entity.close - previousEma[period]!) * multiplier +
+                previousEma[period]!;
             entity.emaValueList![emaDayList.indexOf(period)] = ema;
             previousEma[period] = ema; // 更新前一个EMA值
           }
@@ -68,7 +73,6 @@ class DataUtil {
       }
     }
   }
-
 
   static void calcBOLL(List<KLineEntity> dataList, int n, int k) {
     _calcBOLLMA(n, dataList);

@@ -22,37 +22,38 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
   @override
   void drawChart(VolumeEntity lastPoint, VolumeEntity curPoint, double lastX,
       double curX, Size size, Canvas canvas) {
-
-    if(chartStyle.volisDouble){
+    if (chartStyle.volisDouble) {
       /// 双成交量
-      double left = curPoint.vol * curPoint.open * 1.2 / (curPoint.close + curPoint.open);
-      double right = curPoint.vol * (curPoint.close + curPoint.open - curPoint.open * 1.2) / (curPoint.close + curPoint.open);
+      double left =
+          curPoint.vol * curPoint.open * 1.2 / (curPoint.close + curPoint.open);
+      double right = curPoint.vol *
+          (curPoint.close + curPoint.open - curPoint.open * 1.2) /
+          (curPoint.close + curPoint.open);
       // double r = mVolWidth / 2;
       double topLeft = getVolY(left);
       double topRight = getVolY(right);
       double bottom = chartRect.bottom;
       if (curPoint.vol != 0) {
-
         canvas.drawRect(
             Rect.fromLTRB(curX - mVolWidth, topLeft, curX - 1, bottom),
             chartPaint
-              ..color = curPoint.close > curPoint.open || curPoint.open < curPoint.vol
-                  ? chartColors.dnColor
-                  : chartColors.upColor);
+              ..color =
+                  curPoint.close > curPoint.open || curPoint.open < curPoint.vol
+                      ? chartColors.dnColor
+                      : chartColors.upColor);
+
+        canvas.drawRect(Rect.fromLTRB(curX - 1, topLeft, curX + 1, bottom),
+            chartPaint..color = Colors.transparent);
 
         canvas.drawRect(
-            Rect.fromLTRB(curX - 1 , topLeft, curX + 1, bottom),
+            Rect.fromLTRB(curX + 1, topRight, curX + mVolWidth, bottom),
             chartPaint
-              ..color = Colors.transparent);
-
-        canvas.drawRect(
-            Rect.fromLTRB(curX + 1 , topRight, curX + mVolWidth, bottom),
-            chartPaint
-              ..color = curPoint.close > curPoint.open || curPoint.close >= curPoint.vol
+              ..color = curPoint.close > curPoint.open ||
+                      curPoint.close >= curPoint.vol
                   ? chartColors.upColor
                   : chartColors.dnColor);
       }
-    }else{
+    } else {
       /// 单成交量
       double r = mVolWidth / 2;
       double top = getVolY(curPoint.vol);
@@ -65,11 +66,7 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
                   ? chartColors.upColor
                   : chartColors.dnColor);
       }
-
     }
-
-
-
 
     if (chartStyle.showMAVolume && lastPoint.MA5Volume != 0) {
       drawLine(lastPoint.MA5Volume, curPoint.MA5Volume, canvas, lastX, curX,
@@ -121,8 +118,8 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
   @override
   void drawVerticalText(canvas, textStyle, int gridRows) {
     if (chartStyle.isShowStrategyTypeBottomForMaxVol) {
-      TextSpan span =
-          TextSpan(text: "\n\n\n${NumberUtil.format(maxValue)}", style: textStyle);
+      TextSpan span = TextSpan(
+          text: "\n\n\n${NumberUtil.format(maxValue)}", style: textStyle);
       TextPainter tp =
           TextPainter(text: span, textDirection: TextDirection.ltr);
       tp.layout();

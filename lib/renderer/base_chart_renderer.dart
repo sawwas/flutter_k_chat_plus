@@ -1,8 +1,6 @@
-
 import 'package:flutter/material.dart';
 
 export '../chart_style.dart';
-
 
 abstract class BaseChartRenderer<T> {
   double maxValue, minValue;
@@ -18,7 +16,7 @@ abstract class BaseChartRenderer<T> {
   Paint gridPaint = Paint()
     ..isAntiAlias = true
     ..filterQuality = FilterQuality.high
-  //EMA
+    //EMA
     ..strokeWidth = 0.21
     ..color = Color(0xff4c5c74);
 
@@ -41,11 +39,11 @@ abstract class BaseChartRenderer<T> {
 
   double getY(double y) => (maxValue - y) * scaleY + chartRect.top;
 
-  String format(double? n,{isNotPoint = false}) {
+  String format(double? n, {isNotPoint = false}) {
     if (n == null || n.isNaN) {
       return "0.00";
     } else {
-      if(isNotPoint){
+      if (isNotPoint) {
         return n.toStringAsFixed(2);
       }
       //EMA
@@ -84,7 +82,6 @@ abstract class BaseChartRenderer<T> {
     return numberString.length - decimalIndex - 1;
   }
 
-
   void drawGrid(Canvas canvas, int gridRows, int gridColumns);
 
   void drawText(Canvas canvas, T data, double x);
@@ -119,20 +116,35 @@ String formatValue(double? value) {
   }
   if (value < 1e-6) {
     // 对于非常小的数值，显示足够多的小数位
-    return value.toStringAsFixed(13).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');
-        } else if (value < 0.0001) {
+    return value
+        .toStringAsFixed(13)
+        .replaceAll(RegExp(r'0*$'), '')
+        .replaceAll(RegExp(r'\.$'), '');
+  } else if (value < 0.0001) {
     // 对于小于0.0001的数值，显示13位小数
-    return value.toStringAsFixed(13).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');
+    return value
+        .toStringAsFixed(13)
+        .replaceAll(RegExp(r'0*$'), '')
+        .replaceAll(RegExp(r'\.$'), '');
     // return value.toString();
   } else if (value < 1) {
     // 对于小于1但不非常小的数值，显示最多6位小数
-    return value.toStringAsFixed(6).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');
+    return value
+        .toStringAsFixed(6)
+        .replaceAll(RegExp(r'0*$'), '')
+        .replaceAll(RegExp(r'\.$'), '');
   } else if (value < 1000) {
     // 对于大于等于1且小于1000的数值，保留2位小数
-    return value.toStringAsFixed(2).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');
+    return value
+        .toStringAsFixed(2)
+        .replaceAll(RegExp(r'0*$'), '')
+        .replaceAll(RegExp(r'\.$'), '');
   } else {
     // 对于大于等于1000的数值，保留1位小数
-    return value.toStringAsFixed(1).replaceAll(RegExp(r'0*$'), '').replaceAll(RegExp(r'\.$'), '');
+    return value
+        .toStringAsFixed(1)
+        .replaceAll(RegExp(r'0*$'), '')
+        .replaceAll(RegExp(r'\.$'), '');
   }
 }
 

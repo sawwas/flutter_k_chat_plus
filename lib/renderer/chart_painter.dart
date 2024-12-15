@@ -389,8 +389,7 @@ class ChartPainter extends BaseChartPainter {
 
         return span;
       }, isLeft: true);
-      tp.paint(
-          canvas, Offset(x + chartStyle.leftPadding, y - tp.height / 2));
+      tp.paint(canvas, Offset(x + chartStyle.leftPadding, y - tp.height / 2));
     } else {
       //EMA
       TextPainter tp = getTextPainter(
@@ -405,10 +404,8 @@ class ChartPainter extends BaseChartPainter {
 
         return span;
       }, isLeft: false);
-      tp.paint(
-          canvas,
-          Offset(
-              x + chartStyle.leftPadding - tp.width, y - tp.height / 2));
+      tp.paint(canvas,
+          Offset(x + chartStyle.leftPadding - tp.width, y - tp.height / 2));
     }
     x = translateXtoX(getX(mMainMaxIndex));
     y = getMainY(mMainHighMaxValue);
@@ -426,8 +423,7 @@ class ChartPainter extends BaseChartPainter {
 
         return span;
       }, isLeft: true);
-      tp.paint(
-          canvas, Offset(x + chartStyle.leftPadding, y - tp.height / 2));
+      tp.paint(canvas, Offset(x + chartStyle.leftPadding, y - tp.height / 2));
     } else {
       //EMA
       TextPainter tp = getTextPainter(
@@ -441,10 +437,8 @@ class ChartPainter extends BaseChartPainter {
 
         return span;
       }, isLeft: false);
-      tp.paint(
-          canvas,
-          Offset(
-              x + chartStyle.leftPadding - tp.width, y - tp.height / 2));
+      tp.paint(canvas,
+          Offset(x + chartStyle.leftPadding - tp.width, y - tp.height / 2));
     }
   }
 
@@ -470,20 +464,16 @@ class ChartPainter extends BaseChartPainter {
       y = getMainY(mMainHighMaxValue);
     }
 
-    nowPricePaint
-      .color = value >= datas!.last.open
-          ? chartColors.nowPriceUpColor
-          : chartColors.nowPriceDnColor;
+    nowPricePaint.color = value >= datas!.last.open
+        ? chartColors.nowPriceUpColor
+        : chartColors.nowPriceDnColor;
     //first draw the horizontal line
     double startX = 0;
     final max = -mTranslateX + mWidth / scaleX;
-    final space =
-        chartStyle.nowPriceLineSpan + chartStyle.nowPriceLineLength;
+    final space = chartStyle.nowPriceLineSpan + chartStyle.nowPriceLineLength;
     while (startX < max) {
-      canvas.drawLine(
-          Offset(startX, y),
-          Offset(startX + chartStyle.nowPriceLineLength, y),
-          nowPricePaint);
+      canvas.drawLine(Offset(startX, y),
+          Offset(startX + chartStyle.nowPriceLineLength, y), nowPricePaint);
       startX += space;
     }
     //repaint the background and text
