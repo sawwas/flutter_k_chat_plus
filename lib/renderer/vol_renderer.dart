@@ -96,11 +96,11 @@ class VolRenderer extends BaseChartRenderer<VolumeEntity> {
               // text: "VOL:${NumberUtil.format(data.vol)}    ",
               // style: getTextStyle(chartColors.volColor)),
               style: getTextStyle(
-                  chartColors.infoWindowTitleColor.withOpacity(0.5))),
+                  chartColors.infoWindowTitleColor.withValues(alpha: 0.5))),
           formatValueSpan(
               (double.tryParse('${data.vol}') ?? 0.0),
               getTextStyle(
-                  chartColors.infoWindowTitleColor.withOpacity(0.5))),
+                  chartColors.infoWindowTitleColor.withValues(alpha: 0.5))),
           if (data.MA5Volume.notNullOrZero && chartStyle.isShowBottomMa)
             TextSpan(
                 text: "MA5:${NumberUtil.format(data.MA5Volume!)}    ",

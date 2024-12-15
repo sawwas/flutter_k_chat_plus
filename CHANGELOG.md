@@ -1,3 +1,7 @@
+## [1.0.2-5.2.2.2]
+
+* Update: fix some bugs
+
 ## [1.0.2-5.2.2.1]
 
 * Update: fix some bugs

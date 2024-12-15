@@ -10,6 +10,8 @@
 
 ### 2024-07-16 Update: Skeleton screen functionality
 
+Experienced software developer open to new opportunities, Reach out via Telegram: @sandaohaizi .
+
 Maybe this is the best k chart in Flutter.Support drag,scale,long press,fling.And easy to use.
 
 |Example1|Example2|

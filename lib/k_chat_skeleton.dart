@@ -91,7 +91,7 @@ class SkeletonChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final gridPaint = Paint()
-      ..color = Colors.grey[600]!.withOpacity(0.05)
+      ..color = Colors.grey[600]!.withValues(alpha: 0.05)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
@@ -120,8 +120,8 @@ class SkeletonChartPainter extends CustomPainter {
 
       final candlePaint = Paint()
         ..color = candle.isBullish
-            ? Colors.grey[200]!.withOpacity(0.10)
-            : Colors.grey[700]!.withOpacity(0.05)
+            ? Colors.grey[200]!.withValues(alpha: 0.10)
+            : Colors.grey[700]!.withValues(alpha: 0.05)
         ..style = PaintingStyle.fill;
 
       final openY = size.height - candle.open * scaleFactor;
